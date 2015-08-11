@@ -13,7 +13,7 @@ riot_api = '.api.pvp.net/api/lol/'
 match_api = '/v2.2/match/'
 timeline = 'true'
 rootpath = os.path.split(os.getcwd())[0]
-noError = 5
+noError = 3
 regions = []
 matchIds = []
 
@@ -51,7 +51,7 @@ def getMatchData(matchId, region):
         return 0
     data = requests.get(url).json()
 
-    if (len(data) < noError):
+    if (len(data) <= noError):
         return -1
 
 
