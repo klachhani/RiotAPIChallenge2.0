@@ -34,8 +34,10 @@ def getMatchIds():
     path = os.path.join(matchDataFolder, matchIdDirectory)
 
     for f in os.listdir(path):
-        if os.path.isfile(os.path.join(path, f.title())):
-            matchRegionsJson.append(os.path.join(path, f))
+        print(f)
+        if f.endswith('.json'):
+            if os.path.isfile(os.path.join(path, f.title())):
+                matchRegionsJson.append(os.path.join(path, f))
 
     for f in os.listdir(path):
         if os.path.isfile(os.path.join(path, f.title())):
@@ -57,11 +59,10 @@ def getMatchData(matchId, region, api_key):
     data = requests.get(url).json()
     time.sleep(0.5)
 
-    if (len(data) == error):
+    if len(data) == error:
         print()
         print(data)
         return -1
-
 
     with open(path, 'w') as outfile:
         json.dump(data, outfile)
