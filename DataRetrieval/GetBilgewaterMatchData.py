@@ -13,7 +13,7 @@ riot_api = '.api.pvp.net/api/lol/'
 match_api = '/v2.2/match/'
 timeline = 'true'
 rootpath = os.path.split(os.getcwd())[0]
-noError = 200
+noError = 5
 regions = []
 matchIds = []
 
