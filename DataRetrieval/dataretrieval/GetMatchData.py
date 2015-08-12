@@ -34,7 +34,6 @@ def getMatchIds():
     path = os.path.join(matchDataFolder, matchIdDirectory)
 
     for f in os.listdir(path):
-        print(f)
         if f.endswith('.json'):
             if os.path.isfile(os.path.join(path, f.title())):
                 matchRegionsJson.append(os.path.join(path, f))
@@ -57,7 +56,7 @@ def getMatchData(matchId, region, api_key):
     if (os.path.isfile(path)):
         return 0
     data = requests.get(url).json()
-    time.sleep(0.5)
+    time.sleep(0.8)
 
     if len(data) == error:
         print()
@@ -85,6 +84,7 @@ def main():
             progressCounter -= 1
             sys.stdout.write('\rProgress Countdown: ' + regions[i].upper() + ' ' +  str(progressCounter))
             sys.stdout.flush()
+
 
 
 
