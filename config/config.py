@@ -9,22 +9,27 @@ class Config():
     configfilename = 'config.ini'
     configuration.read(configfilename)
     overwrite = ''
+    riot_api_key = ''
+    pushbullet_api_key = ''
+    data_directory = ''
+    match_ids_subdirectory = ''
+    match_data_directory = ''
 
     def read(self):
         self.configuration.read(self.configfilename)
 
-        riot_api_key = self.configuration['API']['riot_api_key']
-        pushbullet_api_key = self.configuration['API']['pushbullet_api_key']
-        data_directory = self.configuration['Directories']['data']
-        match_ids_subdirectory = self.configuration['Sub-Directories']['Match_Ids']
-        match_data_directory = self.configuration['Sub-Directories']['Match_Data']
+        self.riot_api_key = self.configuration['API']['riot_api_key']
+        self.pushbullet_api_key = self.configuration['API']['pushbullet_api_key']
+        self.data_directory = self.configuration['Directories']['data']
+        self.match_ids_subdirectory = self.configuration['Sub-Directories']['Match_Ids']
+        self.match_data_directory = self.configuration['Sub-Directories']['Match_Data']
 
         print()
-        print('Riot API Key: ' + riot_api_key)
-        print('Pushbullet Access Token: ' + pushbullet_api_key)
-        print('Data Directory: ' + data_directory)
-        print('Match Ids Sub-Directory: ' + match_ids_subdirectory)
-        print('Match Data Sub-Directory: ' + match_data_directory)
+        print('Riot API Key: ' + self.riot_api_key)
+        print('Pushbullet Access Token: ' + self.pushbullet_api_key)
+        print('Data Directory: ' + self.data_directory)
+        print('Match Ids Sub-Directory: ' + self.match_ids_subdirectory)
+        print('Match Data Sub-Directory: ' + self.match_data_directory)
         print()
 
     def confirm(self):
@@ -35,7 +40,7 @@ class Config():
                 self.overwrite_config()
 
 
-    def main(self):
+    def set_up(self):
         self.read()
         try:
             with open(self.configfilename, 'x') as configfile:

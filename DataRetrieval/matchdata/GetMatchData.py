@@ -1,7 +1,6 @@
 __author__ = 'Kishan'
 
-
-import dataretrieval.matchdata
+import dataretrieval
 import requests
 import os
 import json
@@ -9,15 +8,21 @@ import sys
 from pushbullet import PushBullet
 import time
 
-riot_api_key = dataretrieval.matchdata.riot_api_key
-pb_api_key = dataretrieval.matchdata.pushbullet_api_key
-matchDataFolder = r'E:\Google Drive\RiotAPIChallenge2.0\MatchData'
+riot_api_key = dataretrieval.riot_api_key
+pb_api_key = dataretrieval.pushbullet_api_key
+data_directory = dataretrieval.data_directory
+match_data_directory = dataretrieval.match_data_directory
+print(match_data_directory)
+match_id_directory = dataretrieval.match_ids_subdirectory
+print(match_id_directory)
 
-error = 1
+api_challenge_goal = 'Bilgewater' #APItem
+
+match_data_directory = os.path.join(match_data_directory, api_challenge_goal + 'MatchData')
+match_id_directory = os.path.join(match_id_directory, api_challenge_goal + 'MatchIds')
+
 regions = []
 matchIds = []
-matchIdDirectory = 'MatchIDs/BilgewaterMatchIDs'
-matchDataDirectory = 'BilgewaterMatchData'
 apiMaxRetryAttempts = 15
 progressThisSession = int
 start = time
@@ -60,15 +65,13 @@ def get_match_ids():
     match_regions_json = []
     matchIds.clear()
     regions.clear()
-    path = os.path.join(matchDataFolder, matchIdDirectory)
 
-    for f in os.listdir(path):
+    for f in os.listdir(match_id_directory):
         if f.endswith('.json'):
-            if os.path.isfile(os.path.join(path, f.title())):
-                match_regions_json.append(os.path.join(path, f))
+            match_regions_json.append(os.path.join(match_id_directory, f))
 
-    for f in os.listdir(path):
-        if os.path.isfile(os.path.join(path, f.title())):
+    for f in os.listdir(match_id_directory):
+        if f.endswith('.json'):
             regions.append((f[:-5]).lower())
 
     for r in match_regions_json:
@@ -83,7 +86,7 @@ def get_match_data(match_id, region, progress_counter):
     global end
     global progressThisSession
     url = url_builder(region, match_id, riot_api_key)
-    path = os.path.join(matchDataFolder, matchDataDirectory, region.upper(), match_id + '.json')
+    path = os.path.join(data_directory, match_data_directory, region.upper(), match_id + '.json')
     if os.path.isfile(path):
         return 0
 
@@ -94,7 +97,6 @@ def get_match_data(match_id, region, progress_counter):
             data = requests.request('GET', url)
         except ConnectionError:
             retry_counter += 1
-            print('ConnectionError')
             continue
         retry_counter += 1
         if not data.ok:
