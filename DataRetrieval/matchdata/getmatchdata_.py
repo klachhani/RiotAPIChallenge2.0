@@ -8,19 +8,6 @@ import sys
 from pushbullet import PushBullet
 import time
 
-riot_api_key = dataretrieval.riot_api_key
-pb_api_key = dataretrieval.pushbullet_api_key
-data_directory = dataretrieval.data_directory
-match_data_directory = dataretrieval.match_data_directory
-print(match_data_directory)
-match_id_directory = dataretrieval.match_ids_subdirectory
-print(match_id_directory)
-
-api_challenge_goal = 'Bilgewater' #APItem
-
-match_data_directory = os.path.join(match_data_directory, api_challenge_goal + 'MatchData')
-match_id_directory = os.path.join(match_id_directory, api_challenge_goal + 'MatchIds')
-
 regions = []
 matchIds = []
 apiMaxRetryAttempts = 15
@@ -51,6 +38,7 @@ def main():
 
 
 def url_builder(region, match_id, riot_api_key):
+
     https = 'https://'
     riot_api = '.api.pvp.net/api/lol/'
     match_api = '/v2.2/match/'
