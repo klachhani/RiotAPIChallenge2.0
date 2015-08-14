@@ -16,14 +16,18 @@ match_data_directory = ''
 
 
 def set_up():
-    read()
+    if not os.path.isfile(configfilename):
+        write_config()
+    else:
+        read()
+
     try:
         with open(configfilename, 'x') as configfile:
             read().configuration.write(configfile)
     except FileExistsError as e:
         overwrite = input('Overwrite existing config file (y/n])?\t')
         if overwrite.lower() == 'y':
-            overwrite_config()
+            write_config()
 
 
 def read():
@@ -55,10 +59,10 @@ def confirm():
         read()
         proceed = input('Confirmation - Is this correct (y/n)?\t')
         if proceed.lower() == 'n':
-            overwrite_config()
+            write_config()
 
 
-def overwrite_config():
+def write_config():
     riot_api_key = input('Enter your Riot API key here: ')
     pushbullet_api_key = input('Enter your Pushbullet API key here: ')
     data_directory = input('Enter the directory containing the data here: ')
