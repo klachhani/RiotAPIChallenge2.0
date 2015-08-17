@@ -13,7 +13,7 @@ if not pushbullet_api_key == '':
 
 
 
-def request(url, max_attempts, region, progress_counter):
+def request(url, max_attempts, region, progress_counter = -1):
     statuscode_not_ok = True
     attempts = 0
 
@@ -23,21 +23,24 @@ def request(url, max_attempts, region, progress_counter):
         except gaierror:
             print('\n')
             if not pushbullet_api_key == '':
-                pb.push_note(gaierror)
-            sys.exit('Connection error', gaierror)
+                pb.push_note('Connection error', gaierror)
+            sys.exit(gaierror)
         if data.ok:
             return data.json()
         else:
             statuscode_not_ok = True
             attempts += 1
-            progress_countdown_error(region, progress_counter,
-                                     data, attempts, max_attempts)
+            if not progress_counter == -1:
+                progress_countdown_error(region, progress_counter,
+                                         data, attempts, max_attempts)
         if attempts == max_attempts:
             print('\n')
             err_msg = 'Error: ' + str(data.status_code) + ': ' \
                       + data.json()['status']['message']
             if not pushbullet_api_key == '':
-                pb.push_note('Reached max attempts', err_msg)
+                pb.push_note('Reached max attempts', err_msg + '\n'
+                             + progress_counter + ' Remaning for '
+                             + region.upper())
             sys.exit('Error: '
                      + str(data.status_code) + ': '
                      + data.json()['status']['message'])

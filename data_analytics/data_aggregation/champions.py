@@ -4,12 +4,11 @@ import data_retrieval.match_data.get_match_data as matchdata
 import data_retrieval.static_data as static_data
 import data_retrieval.static_data.get_champion_keys as champ_keys
 import config.config as config
-import requests
 import json
 import os
 import sys
 
-regions = [(matchdata.get_match_regions())[0]] #rhsdjstkstrjsrksrkskxrk
+regions = [(matchdata.get_match_regions())[0]] #Limit regions?
 
 print('\nCHAMPIONS\n')
 
@@ -75,7 +74,7 @@ def populate_dict(champions_json):
 
 
 def write_champions_json(champions_json):
-    os.chdir(os.path.dirname(os.path.dirname(__file__)))
+    os.chdir(os.path.dirname(__file__))
     with open('champions.json', 'w') as outfile:
         json.dump(champions_json, outfile)
 
