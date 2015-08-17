@@ -13,3 +13,7 @@ for r in regions:
           + '/v1.2/item?api_key=' + config.riot_api_key
     data = url_requests.request(url, r, max_attempts)['data']
     bw_minions[r] = {}
+
+    for key in data.items():
+        print(key['group'])
+

@@ -41,8 +41,6 @@ def create_champions_dict(minions_json):
         champion_keys = champ_keys.get_champion_key_by_id(r)
         for hast in static_data.highest_achieved_season_tier:
             minions_json[r][hast] = {}
-
-
             for key, value in champion_keys.items():
                 minions_json[r][hast][key] = {'key': value, 'won': 0, 'lost': 0}
 
