@@ -4,13 +4,14 @@ import os
 import sys
 import json
 import requests
-import data_retrieval
+import data_retrieval.url_requests as url_request
 import config.config as config
 
 
 match_id_directory = config.match_ids_directory
 match_data_directory = config.match_data_directory
 progress_counter = int
+max_url_requests = 15
 
 def main():
     global progress_counter
@@ -26,7 +27,7 @@ def main():
             if file_exists(regions[r], match_ids[r][j]):
                 progress_counter -= 1
                 continue
-            match_data = get_match_data(regions[r], match_ids[r][j])
+            match_data = get_match_data(regions[r], match_ids[r][j], progress_counter)
             if match_data == 0:
 
                 return
@@ -68,25 +69,10 @@ def write_match_data(match_data, region, match_id):
         json.dump(match_data, outfile)
 
 
-def get_match_data(region, match_id):
+def get_match_data(region, match_id, progress_counter):
 
-    statuscode_not_ok = True
-    max_attempts = 15
-    attempts = 0
     url = url_builder(region, match_id, '/v2.2/match/')
-
-    while statuscode_not_ok:
-        data = requests.get(url)
-        if data.ok:
-            return data.json()
-        else:
-            statuscode_not_ok = True
-            attempts += 1
-            progress_countdown_error(region, progress_counter,
-                                     data, attempts, max_attempts)
-        if attempts == max_attempts:
-            print('\nAborting')
-            return 0
+    return url_request.request(url, max_url_requests, region, progress_counter)
 
 
 def url_builder(region, match_id, api_request):
@@ -102,14 +88,6 @@ def url_builder(region, match_id, api_request):
 def progress_countdown(progress_counter, region):
     sys.stdout.write('\rProgress Countdown: ' + region.upper() +
                              ' ' +  str(progress_counter))
-    sys.stdout.flush()
-
-
-def progress_countdown_error(region, progress_counter, data, attempts, max_attempts):
-    sys.stdout.write('\rProgress Countdown: ' + region.upper() + ' ' +
-                                 str(progress_counter) + '\t\t' + 'Http status code: ' +
-                                 str(data.status_code) + '\tRetry attempt...' +
-                                 str(attempts) + '/' + str(max_attempts))
     sys.stdout.flush()
 
 
