@@ -1,19 +1,41 @@
 __author__ = 'Kishan'
 
-import data_retrieval.url_requests as url_requests
-import data_retrieval.match_data.get_match_data as match_data
-import config.config as config
+from data_retrieval import url_requests
+from config import config
+from data_retrieval import static_data
 
-regions = [(match_data.get_match_regions())[0]] #Limit regions?
-max_attempts = 15
+max_attempts = static_data.max_attempts
 
-bw_minions = {}
-for r in regions:
-    url = 'https://global.api.pvp.net/api/lol/static-data/'+ r \
-          + '/v1.2/item?api_key=' + config.riot_api_key
-    data = url_requests.request(url, r, max_attempts)['data']
-    bw_minions[r] = {}
+def get_minions_by_id(region):
+    dict = {}
+    url = 'https://global.api.pvp.net/api/lol/static-data/'+ region \
+          + '/v1.2/item?locale=en_US&api_key=' + config.riot_api_key
+    data = url_requests.request(url, max_attempts)['data']
 
-    for key in data.items():
-        print(key['group'])
+    for key, value in data.items():
+        if 'group' in value and value['group'].startswith('BWMerc1'):
+            dict[value['id']] = {'name' : value['name']}
+    return dict
 
+
+def get_minions_by_name(region):
+    return dict(zip(get_minions_by_id(region).values(),
+                    get_minions_by_id(region).keys()))
+
+
+def get_minion_upgrades_by_id(region):
+    dict = {}
+    url = 'https://global.api.pvp.net/api/lol/static-data/'+ region \
+          + '/v1.2/item?locale=en_US&api_key=' + config.riot_api_key
+    data = url_requests.request(url, max_attempts)['data']
+
+    for key, value in data.items():
+        if 'group' in value and value['group'].startswith('BWMerc') \
+                and not value['group'].startswith('BWMerc1'):
+            dict[value['id']] = {'name' : value['name']}
+    return dict
+
+
+def get_minion_upgrades_by_name(region):
+    return dict(zip(get_minion_upgrades_by_id(region).values(),
+                    get_minion_upgrades_by_id(region).keys()))
