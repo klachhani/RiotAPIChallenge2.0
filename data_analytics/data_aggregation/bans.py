@@ -5,87 +5,72 @@ import json
 import sys
 import csv
 import config.config as config
+import data_retrieval.match_data.get_match_data as matchdata
+import data_retrieval.static_data.get_champion_id as champ_keys
 
-region = 'BR'
-
+regions = (matchdata.get_match_regions()) #Limit regions?
 match_data_directory = config.match_data_directory
+matches = os.listdir(os.path.join(match_data_directory, str(regions[0])))
+banorder=["first","second","third","fourth","fifth","sixth"]
 
-print(match_data_directory)
-match_data_directory = os.path.join(match_data_directory, region)
-print(match_data_directory)
-matches = os.listdir(match_data_directory)
+def main():
+    bans_json = {}
+    dictcreate(bans_json)
+    dictfill(bans_json)
+    writedict(bans_json, "test3")
+    print("done")
 
-#initalising dictionary
-bans = {}
-bans["first"] = {}
-bans["second"] = {}
-bans["third"] = {}
-bans["fourth"] = {}
-bans["fifth"] = {}
-bans["sixth"] = {}
+def idlist():
+    id=[]
+    for ids in champ_keys.get_champion_key_by_id("br"):
+        id.append(int(ids))
+    return id
 
-#initialising variables
-first = []
-second = []
-third = []
-fourth = []
-fifth = []
-sixth = []
+def dictcreate(bans_json):
+    bans_json["region"] = {}
+    id=idlist()
+    for i in regions:
+        bans_json["region"][str(i)] = {}
+        for b in id:
+            bans_json["region"][str(i)][b] = {"total":0}
+            for a in banorder:
+                bans_json["region"][str(i)][b][str(a)] = {"win":0,"loss":0,"total":0}
 
-minutes = 0
+def dictfill(bans_json):
+    progress_counter = 0
+    for i in matches:   #loop through file in match data directory
+        if i.endswith('json'):  #only consider .json files
+            progress_counter += 1
+            sys.stdout.write('\rProgress: ' + str(progress_counter) + '/' + str(len(matches)-1))
+            sys.stdout.flush()
+            matchdata = os.path.join(os.path.join(match_data_directory, str(regions[0])), i)
+            with open(matchdata, 'r') as f: #open match file
+                try:
+                    data = json.load(f) #load match file as json
+                except:
+                    pass
+        for n in range(0,2):
+            if "bans" in data["teams"][n]:
+                k=len(data["teams"][n]["bans"])
+                for m in range(0,k):
+                    t=data["teams"][n]["bans"][m]["pickTurn"] -1
+                    champid=data["teams"][n]["bans"][m]["championId"]
+                    bans_json["region"]["br"][int(champid)]["total"]+= 1
+                    bans_json["region"]["br"][int(champid)][banorder[t]]["total"] += 1
+                    if data["teams"][n]["winner"] != True :
+                        bans_json["region"]["br"][int(champid)][banorder[t]]["loss"]+=1
+                    else:
+                        bans_json["region"]["br"][int(champid)][banorder[t]]["win"]+=1
+            else:
+                print(matchdata)
+                print(n)
 
-progress_counter = 0
-for i in matches:   #loop through file in match data directory
-    if i.endswith('json'):  #only consider .json files
-        progress_counter += 1
-        sys.stdout.write('\rProgress: ' + str(progress_counter) + '/' + str(len(matches)-1))
-        sys.stdout.flush()
-        matchdata = os.path.join(match_data_directory, i)
-        with open(matchdata, 'r') as f: #open match file
-            try:
-                data = json.load(f) #load match file as json
-            except:
-                print('\n' + i + '\n') #print json file if error and skip this file
-                continue
-            try:
-                first.append(int(data["teams"][0]["bans"][0]["championId"]))
-                second.append(int(data["teams"][1]["bans"][0]["championId"]))
-                third.append(int(data["teams"][0]["bans"][1]["championId"]))
-                fourth.append(int(data["teams"][1]["bans"][1]["championId"]))
-                fifth.append(int(data["teams"][0]["bans"][2]["championId"]))
-                sixth.append(int(data["teams"][1]["bans"][2]["championId"]))
-            except:
-                pass
+def writedict(bans_json,name):
+    os.chdir(os.path.dirname(__file__))
+    with open(name+'.json', 'w')as f:
+        json.dump(bans_json,f)
 
 
-def dictcreate(bannumber,name):
-    for i in range(0,len(bannumber)):
-        bans[name][bannumber[i]]=0
+main()
 
-    return bans[str(name)]
 
-def dictfill(bannumber,name):
-    for key in bannumber:
-        bans[name][key] +=1
-
-def listcreate(bannumber):
-    banlist=[]
-    for keys in bans[bannumber].keys():
-        banlist.append([keys,bans[bannumber][keys]])
-    return banlist
-
-dictcreate(first,"first")
-dictfill(first,"first")
-dictcreate(second,"second")
-dictfill(second,"second")
-dictcreate(third,"third")
-dictfill(third,"third")
-dictcreate(fourth,"fourth")
-dictfill(fourth,"fourth")
-dictcreate(fifth,"fifth")
-dictfill(fifth,"fifth")
-dictcreate(sixth,"sixth")
-dictfill(sixth,"sixth")
-
-with open('test1.json', 'w')as f:
-   json.dump(bans,f)
