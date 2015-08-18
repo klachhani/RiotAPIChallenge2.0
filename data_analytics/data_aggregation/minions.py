@@ -1,14 +1,14 @@
 __author__ = 'Kishan'
 
-import data_retrieval.match_data.get_match_data as matchdata
-import data_retrieval.static_data as static_data
-import data_retrieval.static_data.get_champion_keys as champ_keys
-import config.config as config
+from data_retrieval.match_data import get_match_data
+from data_retrieval import static_data
+from data_retrieval.static_data import get_champion_data
+from config import config
 import json
 import os
 import sys
 
-regions = [(matchdata.get_match_regions())[0]] #Limit regions?
+regions = [(get_match_data.get_match_regions())[0]] #Limit regions?
 
 print('\nMinions\n')
 
@@ -38,7 +38,7 @@ def main():
 def create_champions_dict(minions_json):
     for r in regions:
         minions_json[r] = {}
-        champion_keys = champ_keys.get_champion_key_by_id(r)
+        champion_keys = get_champion_data.get_champion_by_id(r)
         for hast in static_data.highest_achieved_season_tier:
             minions_json[r][hast] = {}
             for key, value in champion_keys.items():

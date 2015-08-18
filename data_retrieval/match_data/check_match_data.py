@@ -1,13 +1,13 @@
 __author__ = 'Kishan'
 
-import config.config as config
-import data_retrieval.match_data.get_match_data as match_data
+from config import config
+from data_retrieval.match_data import get_match_data
 import os
 import json
 import sys
 
 match_data_directory = config.match_data_directory
-regions = match_data.get_match_regions()
+regions = get_match_data.get_match_regions()
 
 
 def progress_countdown(progress_counter, region):
