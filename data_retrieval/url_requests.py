@@ -3,7 +3,6 @@ __author__ = 'Kishan'
 import requests
 import sys
 from socket import gaierror
-import time
 
 def request(url, max_attempts, region = '', progress_counter = -1):
     statuscode_not_ok = True
@@ -27,7 +26,6 @@ def request(url, max_attempts, region = '', progress_counter = -1):
                 progress_countdown_error('', '', data, attempts, max_attempts)
                 sys.stdout.flush()
         if attempts == max_attempts:
-            time.sleep(1)
             sys.exit('\nError: '
                      + str(data.status_code) + ': '
                      + data.json()['status']['message'])
