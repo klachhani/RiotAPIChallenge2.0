@@ -14,7 +14,7 @@ def get_minions_by_id(region):
 
     for key, value in data.items():
         if 'group' in value and value['group'].startswith('BWMerc1'):
-            dict[str(value['id'])] = {'name' : value['name']}
+            dict[value['id']] = {'name' : value['name']}
     return dict
 
 
@@ -32,7 +32,7 @@ def get_minion_upgrades_by_id(region):
     for key, value in data.items():
         if 'group' in value and value['group'].startswith('BWMerc') \
                 and not value['group'].startswith('BWMerc1'):
-            dict[str(value['id'])] = {'name' : value['name']}
+            dict[value['id']] = {'name' : value['name']}
     return dict
 
 
