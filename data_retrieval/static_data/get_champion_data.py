@@ -7,15 +7,17 @@ from  data_retrieval import static_data
 max_attempts = static_data.max_attempts
 
 
-def get_champion_by_id(region):
+def get_champion_by_id(region = 'euw'):
     url = 'https://global.api.pvp.net/api/lol/static-data/'\
           + region + '/v1.2/champion?locale=en_US&champData=all&api_key='\
           + config.riot_api_key
 
-    champ_data = url_requests.request(url, max_attempts)
-    return champ_data['keys']
+    champion_by_id = url_requests.request(url, max_attempts)['keys']
+    static_data.write_json(champion_by_id, 'champion_by_id.json')
 
 
-def get_champion_by_key(region):
-    return dict(zip(get_champion_by_id(region).values(),
+def get_champion_by_key(region = 'euw'):
+    champion_by_name = dict(zip(get_champion_by_id(region).values(),
                     get_champion_by_id(region).keys()))
+
+    static_data.write_json(champion_by_name, 'champion_by_name.json')
