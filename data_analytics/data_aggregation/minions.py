@@ -2,7 +2,7 @@ __author__ = 'Kishan'
 
 from data_retrieval.match_data import get_match_data
 from data_retrieval import static_data
-from data_retrieval.static_data import get_bw_minion_data
+from data_retrieval.static_data import io
 from data_analytics import data_aggregation
 from config import config
 import json
@@ -37,25 +37,26 @@ def main():
 
 
 def create_champions_dict(minions_json):
+    minions = io.read_json('minions_by_id.json')
+    upgrades = io.read_json('upgrades_by_id.json')
     w = len(regions)
     for r in regions:
         minions_json[r] = {}
-        minions = get_bw_minion_data.get_minions_by_id(r)
-        upgrades = get_bw_minion_data.get_minion_upgrades_by_id(r)
+
         for hast in static_data.highest_achieved_season_tier:
             minions_json[r][hast] = {}
             for minion_id, minion_name in minions.items():
                 minions_json[r][hast][minion_id] = \
-                    {'name' : minion_name['name'], 'won' : 0, 'lost' : 0}
+                    {'name' : minion_name, 'won' : 0, 'lost' : 0}
                 for upgrade_id, upgarde_name in upgrades.items():
                     minions_json[r][hast][minion_id][upgrade_id] = \
-                        {'name' : upgarde_name['name'], 'won' : 0, 'lost' : 0}
+                        {'name' : upgarde_name, 'won' : 0, 'lost' : 0}
 
 
 def populate_dict(minions_json):
+    minions_and_upgrades = io.read_json('minions_by_id.json')
+    minions_and_upgrades.update(io.read_json('upgrades_by_id.json'))
     for r in regions:
-        minions_and_upgrades = dict(get_bw_minion_data.get_minions_by_id(r))
-        minions_and_upgrades.update(get_bw_minion_data.get_minion_upgrades_by_id(r))
         match_data_directory = os.path.join(config.match_data_directory, r.upper())
         matches = os.listdir(match_data_directory)
         progress_counter = len(matches)
@@ -74,8 +75,8 @@ def populate_dict(minions_json):
                         for event in frame['events']:
                             if event['eventType'] == 'ITEM_PURCHASED' \
                                     and event['participantId'] == p['participantId'] \
-                                    and event['itemId'] in minions_and_upgrades:
-                                item_id = event['itemId']
+                                    and str(event['itemId']) in minions_and_upgrades:
+                                item_id = str(event['itemId'])
                                 if minion_bought == '':
                                     if win_team_id == team_id: minions_json[r][tier][item_id]['won'] += 1
                                     else: minions_json[r][tier][item_id]['lost'] += 1

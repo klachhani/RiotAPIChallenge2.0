@@ -4,13 +4,11 @@ from data_analytics import data_query
 from data_retrieval.static_data import get_champion_data
 from data_retrieval import static_data
 from data_retrieval.match_data import get_match_data
-import json
-import os
 
 
 def main():
     regions = ['br']
-    tiers = ['PLATINUM']
+    tiers = ['GOLD']
     champions = get_champion_data.get_champion_by_id('euw')
 
     if len(tiers) == 0: tiers = static_data.highest_achieved_season_tier

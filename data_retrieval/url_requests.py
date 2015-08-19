@@ -3,8 +3,12 @@ __author__ = 'Kishan'
 import requests
 import sys
 from socket import gaierror
+import data_retrieval
 
-def request(url, max_attempts, region = '', progress_counter = -1):
+max_attempts = data_retrieval.max_attempts
+
+
+def request(url, region = '', progress_counter = -1):
     statuscode_not_ok = True
     attempts = 0
 

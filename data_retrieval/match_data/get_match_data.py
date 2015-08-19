@@ -71,7 +71,7 @@ def write_match_data(match_data, region, match_id):
 def get_match_data(region, match_id, progress_counter):
 
     url = url_builder(region, match_id, '/v2.2/match/')
-    return url_requests.request(url, max_attempts, region, progress_counter)
+    return url_requests.request(url, max_attempts, progress_counter)
 
 
 def url_builder(region, match_id, api_request):

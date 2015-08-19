@@ -2,7 +2,7 @@ __author__ = 'Kishan'
 
 from data_retrieval.match_data import get_match_data
 from data_retrieval import static_data
-from data_retrieval.static_data import get_champion_data
+from data_retrieval.static_data import io
 from data_analytics import data_aggregation
 from config import config
 import json
@@ -37,9 +37,9 @@ def main():
 
 
 def create_champions_dict(dict):
+    champion_keys = io.read_json('champions_by_id.json')
     for r in regions:
         dict[r] = {}
-        champion_keys = get_champion_data.get_champion_by_id(r)
         for hast in static_data.highest_achieved_season_tier:
             dict[r][hast] = {}
             for key, value in champion_keys.items():
