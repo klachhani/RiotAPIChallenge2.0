@@ -1,7 +1,7 @@
 __author__ = 'Kishan'
 
-from data_analytics import data_query
-from data_retrieval.static_data import get_champion_data
+from data_analytics.data_query import io as query_io
+from data_retrieval.static_data import io as static_io
 from data_retrieval import static_data
 from data_retrieval.match_data import get_match_data
 
@@ -9,12 +9,12 @@ from data_retrieval.match_data import get_match_data
 def main():
     regions = ['br']
     tiers = ['GOLD']
-    champions = get_champion_data.get_champion_by_id('euw')
+    champions = static_io.read_json('champions_by_id.json')
 
     if len(tiers) == 0: tiers = static_data.highest_achieved_season_tier
     if len(regions) == 0: regions = get_match_data.get_match_regions()
 
-    data = data_query.read_json('champions.json')
+    data = query_io.read_json('champions.json')
     dict = {}
 
     create_query_result_dict(dict, regions, tiers, champions)
@@ -33,7 +33,7 @@ def main():
     print(pickrate)
 
     result = {'winrate' : winrate, 'pickrate' : pickrate}
-    data_query.write_json(result, 'test.json')
+    query_io.write_json(result, 'test.json')
 
 
 
@@ -70,7 +70,6 @@ def calculate_extras(dict):
         value['pickrate'] = (100 * ((value['won'] + value['lost'])/total_picks))
 
     dict['totalpicks'] = total_picks
-
 
 
 if __name__ == '__main__':
