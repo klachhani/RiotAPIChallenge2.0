@@ -12,7 +12,7 @@ regions = get_match_data.get_match_regions()
 
 def progress_countdown(progress_counter, region):
     sys.stdout.write('\rProgress Countdown: ' + region.upper() +
-                             ' ' +  str(progress_counter))
+                     ' ' + str(progress_counter))
     sys.stdout.flush()
 
 
@@ -32,5 +32,3 @@ for r in regions:
                 continue
         progress_counter -= 1
         progress_countdown(progress_counter, r)
-
-

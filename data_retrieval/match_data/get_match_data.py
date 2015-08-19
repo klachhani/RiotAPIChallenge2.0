@@ -6,11 +6,11 @@ import json
 from data_retrieval import url_requests
 from config import config
 
-
 match_id_directory = config.match_ids_directory
 match_data_directory = config.match_data_directory
 progress_counter = int
 max_attempts = 15
+
 
 def main():
     global progress_counter
@@ -69,7 +69,6 @@ def write_match_data(match_data, region, match_id):
 
 
 def get_match_data(region, match_id, progress_counter):
-
     url = url_builder(region, match_id, '/v2.2/match/')
     return url_requests.request(url, max_attempts, progress_counter)
 
@@ -86,7 +85,7 @@ def url_builder(region, match_id, api_request):
 
 def progress_countdown(progress_counter, region):
     sys.stdout.write('\rProgress Countdown: ' + region.upper() +
-                             ' ' +  str(progress_counter))
+                     ' ' + str(progress_counter))
     sys.stdout.flush()
 
 

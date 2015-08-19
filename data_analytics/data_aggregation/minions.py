@@ -9,9 +9,10 @@ import json
 import os
 import sys
 
-regions = [(get_match_data.get_match_regions())[0]] #Only 'br'
+regions = [(get_match_data.get_match_regions())[0]]  # Only 'br'
 
 print('\nMinions\n')
+
 
 def main():
     minions_json = {}
@@ -21,7 +22,6 @@ def main():
     create_champions_dict(minions_json)
     sys.stdout.write('\rCreating empty JSON...done!\n')
     sys.stdout.flush()
-
 
     sys.stdout.write('Populating dict...')
     sys.stdout.flush()
@@ -47,10 +47,10 @@ def create_champions_dict(minions_json):
             minions_json[r][hast] = {}
             for minion_id, minion_name in minions.items():
                 minions_json[r][hast][minion_id] = \
-                    {'name' : minion_name, 'won' : 0, 'lost' : 0}
+                    {'name': minion_name, 'won': 0, 'lost': 0}
                 for upgrade_id, upgarde_name in upgrades.items():
                     minions_json[r][hast][minion_id][upgrade_id] = \
-                        {'name' : upgarde_name, 'won' : 0, 'lost' : 0}
+                        {'name': upgarde_name, 'won': 0, 'lost': 0}
 
 
 def populate_dict(minions_json):
@@ -61,29 +61,35 @@ def populate_dict(minions_json):
         matches = os.listdir(match_data_directory)
         progress_counter = len(matches)
         for m in matches:
-            if not m.endswith('json'): continue
+            if not m.endswith('json'):
+                continue
             match_data = os.path.join(match_data_directory, m)
-            with open(match_data, 'r') as f: #open match file
-                data = json.load(f) #load match file as json
+            with open(match_data, 'r') as f:  # open match file
+                data = json.load(f)  # load match file as json
                 win_team_id = [t['teamId'] for t in data['teams'] if t['winner']][0]
                 for p in data['participants']:
                     minion_bought = ''
                     tier = p['highestAchievedSeasonTier']
                     team_id = p['teamId']
                     for frame in data['timeline']['frames']:
-                        if 'events' not in frame: continue
+                        if 'events' not in frame:
+                            continue
                         for event in frame['events']:
                             if event['eventType'] == 'ITEM_PURCHASED' \
                                     and event['participantId'] == p['participantId'] \
                                     and str(event['itemId']) in minions_and_upgrades:
                                 item_id = str(event['itemId'])
                                 if minion_bought == '':
-                                    if win_team_id == team_id: minions_json[r][tier][item_id]['won'] += 1
-                                    else: minions_json[r][tier][item_id]['lost'] += 1
+                                    if win_team_id == team_id:
+                                        minions_json[r][tier][item_id]['won'] += 1
+                                    else:
+                                        minions_json[r][tier][item_id]['lost'] += 1
                                     minion_bought = item_id
                                 else:
-                                    if win_team_id == team_id: minions_json[r][tier][minion_bought][item_id]['won'] += 1
-                                    else: minions_json[r][tier][minion_bought][item_id]['lost'] += 1
+                                    if win_team_id == team_id:
+                                        minions_json[r][tier][minion_bought][item_id]['won'] += 1
+                                    else:
+                                        minions_json[r][tier][minion_bought][item_id]['lost'] += 1
             progress_counter -= 1
             data_aggregation.progress_countdown(progress_counter, r)
 

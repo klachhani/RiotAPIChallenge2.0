@@ -8,7 +8,7 @@ import data_retrieval
 max_attempts = data_retrieval.max_attempts
 
 
-def request(url, region = '', progress_counter = -1):
+def request(url, region='', progress_counter=-1):
     statuscode_not_ok = True
     attempts = 0
 
@@ -37,7 +37,7 @@ def request(url, region = '', progress_counter = -1):
 
 def progress_countdown_error(region, progress_counter, data, attempts, max_attempts):
     sys.stdout.write('\rProgress Countdown: ' + region.upper() + ' ' +
-                                 str(progress_counter) + '\t\t' + 'Http status code: ' +
-                                 str(data.status_code) + '\tRetry attempt...' +
-                                 str(attempts) + '/' + str(max_attempts))
+                     str(progress_counter) + '\t\t' + 'Http status code: ' +
+                     str(data.status_code) + '\tRetry attempt...' +
+                     str(attempts) + '/' + str(max_attempts))
     sys.stdout.flush()

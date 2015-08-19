@@ -3,6 +3,7 @@ __author__ = 'Kishan'
 import os
 import json
 
+
 def read_json(filename):
     path = os.path.join(os.path.dirname(__file__), r'data')
     file_path = os.path.join(path, filename)

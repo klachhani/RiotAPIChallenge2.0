@@ -70,17 +70,13 @@ def write_config():
     match_ids_subdirectory = input('Enter the Bilgewater match ids sub-directory here: ')
     match_data_directory = input('Enter the Bilgewater match data sub-directory here: ')
 
-    configuration['API'] = {'Riot_API_Key': riot_api_key, 'Pushbullet_API_Key' : pushbullet_api_key}
-    configuration['Directories'] = {'Data' : data_directory}
-    configuration['Sub-Directories'] = {'Match_Ids' : match_ids_subdirectory, 'Match_Data': match_data_directory}
+    configuration['API'] = {'Riot_API_Key': riot_api_key, 'Pushbullet_API_Key': pushbullet_api_key}
+    configuration['Directories'] = {'Data': data_directory}
+    configuration['Sub-Directories'] = {
+        'Match_Ids': match_ids_subdirectory, 'Match_Data': match_data_directory
+        }
 
     with open(configfilename, 'w') as configfile:
         configuration.write(configfile)
 
     confirm()
-
-
-
-
-
-

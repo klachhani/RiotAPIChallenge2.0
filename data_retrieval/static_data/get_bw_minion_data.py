@@ -5,9 +5,9 @@ from config import config
 from data_retrieval.static_data import io
 
 
-def get_minions_by_id(region = 'euw'):
+def get_minions_by_id(region='euw'):
     minions_by_id = {}
-    url = 'https://global.api.pvp.net/api/lol/static-data/'+ region \
+    url = 'https://global.api.pvp.net/api/lol/static-data/' + region \
           + '/v1.2/item?locale=en_US&api_key=' + config.riot_api_key
     data = url_requests.request(url)['data']
 
@@ -19,17 +19,16 @@ def get_minions_by_id(region = 'euw'):
     return minions_by_id
 
 
-def get_minions_by_name(region = 'euw'):
+def get_minions_by_name(region='euw'):
     minions_by_id = get_minions_by_id(region)
-    minions_ny_name =  dict(zip(minions_by_id.values(), minions_by_id.keys()))
+    minions_ny_name = dict(zip(minions_by_id.values(), minions_by_id.keys()))
 
     io.write_json(minions_ny_name, 'minions_by_name.json')
 
 
-
-def get_minion_upgrades_by_id(region = 'euw'):
+def get_minion_upgrades_by_id(region='euw'):
     upgrades_by_id = {}
-    url = 'https://global.api.pvp.net/api/lol/static-data/'+ region \
+    url = 'https://global.api.pvp.net/api/lol/static-data/' + region \
           + '/v1.2/item?locale=en_US&api_key=' + config.riot_api_key
     data = url_requests.request(url)['data']
 
@@ -42,12 +41,13 @@ def get_minion_upgrades_by_id(region = 'euw'):
     return upgrades_by_id
 
 
-def get_minion_upgrades_by_name(region = 'euw'):
+def get_minion_upgrades_by_name(region='euw'):
     upgrades_by_id = get_minion_upgrades_by_id(region)
 
     upgrades_by_name = dict(zip(upgrades_by_id.values(), upgrades_by_id.keys()))
 
     io.write_json(upgrades_by_name, 'upgrades_by_name.json')
+
 
 def main():
     get_minions_by_id()

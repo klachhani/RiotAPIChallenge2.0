@@ -15,5 +15,5 @@ def write_json(dict, filename):
 
 def progress_countdown(progress_counter, region):
     sys.stdout.write('\rPopulating dict...' + region.upper() +
-                             ' ' +  str(progress_counter))
+                     ' ' + str(progress_counter))
     sys.stdout.flush()
