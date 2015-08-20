@@ -5,7 +5,7 @@ import json
 
 
 def read_json(filename):
-    path = os.path.join(os.path.split(os.path.dirname(__file__))[0], r'data_aggregation/data')
+    path = os.path.join(os.path.split(os.path.dirname(__file__))[0], r'data_filter/data')
     file_path = os.path.join(path, filename)
     with open(file_path, 'r') as f:
         return json.load(f)

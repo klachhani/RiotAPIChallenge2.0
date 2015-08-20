@@ -3,7 +3,7 @@ __author__ = 'Kishan'
 from data_retrieval.match_data import get_match_data
 from data_retrieval import static_data
 from data_retrieval.static_data import io
-from data_analytics import data_aggregation
+from data_analytics import data_filter
 from config import config
 import json
 import os
@@ -31,7 +31,7 @@ def main():
 
     sys.stdout.write('Writing champions JSON...')
     sys.stdout.flush()
-    data_aggregation.write_json(minions_json, 'minions.json')
+    data_filter.write_json(minions_json, 'minions.json')
     sys.stdout.write('done!')
     sys.stdout.flush()
 
@@ -91,7 +91,7 @@ def populate_dict(minions_json):
                                     else:
                                         minions_json[r][tier][minion_bought][item_id]['lost'] += 1
             progress_counter -= 1
-            data_aggregation.progress_countdown(progress_counter, r)
+            data_filter.progress_countdown(progress_counter, r)
 
 
 if __name__ == '__main__':
