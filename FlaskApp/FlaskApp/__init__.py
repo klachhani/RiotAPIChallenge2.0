@@ -21,10 +21,15 @@ def blackmarketbrawlers():
 
 @app.route('/blackmarketbrawlers/query', methods=['POST'])
 def get_results():
-    json = request.json
-    print(json)
-    print(champions.run_query(regions=json['regions'], tiers=json['tiers']))
-    return jsonify(json)
+    regions = request.json['regions']
+    tiers = request.json['tiers']
+    print(regions)
+    print(tiers)
+    result = champions.run_query(regions=regions, tiers=tiers)
+    print result['winrate']
+    print result['pickrate']
+    return jsonify(result)
+
 
 @app.route('/about')
 def about():

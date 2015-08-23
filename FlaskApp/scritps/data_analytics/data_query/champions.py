@@ -5,7 +5,12 @@ from FlaskApp.scritps.data_retrieval.static_data import static_io as static_io
 from FlaskApp.scritps.data_retrieval import static_data
 
 
-def run_query(regions = static_data.regions, tiers = static_data.highest_achieved_season_tier):
+def run_query(regions, tiers):
+    if len(regions) == 0:
+        regions=static_data.regions
+    if len(tiers) == 0:
+        tiers = static_data.highest_achieved_season_tier
+
     champions = static_io.read_json('champions_by_id.json')
 
     data = query_io.read_json('champions.json')
