@@ -24,14 +24,14 @@ def get_results():
     regions = []
     tiers = []
 
-    #if request.method == 'POST':
-    #    regions = request.json['regions']
-    #    tiers = request.json['tiers']
+    if request.method == 'POST':
+        regions = request.json['regions']
+        tiers = request.json['tiers']
 
-    #if request.method == 'GET':
-    #    result = champions.run_query(regions=regions, tiers=tiers)
-    #    result = jsonify(result)
-    #    return result
+    if request.method == 'GET':
+        result = champions.run_query(regions=regions, tiers=tiers)
+        result = jsonify(result)
+        return result
 
     return 'none'
 

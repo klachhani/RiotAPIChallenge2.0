@@ -58,4 +58,3 @@ target/
 
 .idea/
 *.ini
-venv/
