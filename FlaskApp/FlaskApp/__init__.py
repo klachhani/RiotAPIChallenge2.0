@@ -19,16 +19,22 @@ def blackmarketbrawlers():
     return render_template("blackmarketbrawlers.html", regions=regions, tiers=tiers)
 
 
-@app.route('/blackmarketbrawlers/query', methods=['POST'])
+@app.route('/blackmarketbrawlers/query', methods=['GET', 'POST'])
 def get_results():
-    regions = request.json['regions']
-    tiers = request.json['tiers']
-    print(regions)
-    print(tiers)
-    result = champions.run_query(regions=regions, tiers=tiers)
-    print result['winrate']
-    print result['pickrate']
-    return jsonify(result)
+    regions = []
+    tiers = []
+
+    if request.method == 'POST':
+        regions = request.json['regions']
+        tiers = request.json['tiers']
+
+    if request.method == 'GET':
+        result = champions.run_query(regions=regions, tiers=tiers)
+        result = jsonify(result)
+        return result
+
+    return 'none'
+
 
 
 @app.route('/about')
