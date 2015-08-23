@@ -58,5 +58,4 @@ target/
 
 .idea/
 config/config.ini
-*.json
 venv/
