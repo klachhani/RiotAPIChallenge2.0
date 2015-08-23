@@ -1,5 +1,7 @@
+import sys
 from flask import Flask, render_template, request, jsonify
 
+sys.path.append('/var/www/RiotAPIChallenge2.0')
 from FlaskApp.scritps.data_analytics.data_query import champions
 
 app = Flask(__name__)
@@ -18,15 +20,16 @@ def blackmarketbrawlers():
     tiers = ['UNRANKED', 'BRONZE', 'SILVER', 'GOLD', 'PLATINUM', 'DIAMOND', 'MASTER', 'CHALLENGER']
     return render_template("blackmarketbrawlers.html", regions=regions, tiers=tiers)
 
-
 @app.route('/blackmarketbrawlers/query', methods=['GET', 'POST'])
 def get_results():
     regions = []
     tiers = []
 
     if request.method == 'POST':
-        regions = request.json['regions']
-        tiers = request.json['tiers']
+		regions = request.json['regions']
+		print(regions)
+		tiers = request.json['tiers']
+		print(tiers)
 
     if request.method == 'GET':
         result = champions.run_query(regions=regions, tiers=tiers)
@@ -36,11 +39,10 @@ def get_results():
     return 'none'
 
 
-
 @app.route('/about')
 def about():
     return render_template("about.html")
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
