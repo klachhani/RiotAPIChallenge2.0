@@ -56,13 +56,13 @@ def calculate_extras(result):
         minion['winrate'] = float("%.3f" % (100 * (minion['won'] / minion_picks)) if not minion_picks == 0 else '0')
 
     for m, minion in result.items():
-        minion_picks = minion['won'] + minion['lost']
+        minion_picks = float(minion['won'] + minion['lost'])
         minion['pickrate'] = float("%.3f" % (100 * (minion_picks / total_minion_picks)) if not total_minion_picks == 0 else '0')
         for u, upgrade in minion.items():
             if not type(upgrade) == type({}): continue
-            upgrade_picks = upgrade['won'] + upgrade['lost']
-            upgrade['pickrate'] = float("%.3f" % (100 * (upgrade_picks / minion_picks)) if not minion_picks == 0 else '0')
-            upgrade['winrate'] = float("%.3f" % (100 * (upgrade['won'] / upgrade_picks)) if not upgrade_picks == 0 else '0')
+            upgrade_picks = float(upgrade['won'] + upgrade['lost'])
+            upgrade['pickrate'] = float("%.3f" % ((100 * (upgrade_picks / minion_picks)) if not minion_picks == 0 else 0))
+            upgrade['winrate'] = float("%.3f" % ((100 * (upgrade['won'] / upgrade_picks)) if not upgrade_picks == 0 else 0))
 
 
 def result_breakdown(result):

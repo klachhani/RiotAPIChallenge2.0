@@ -6,7 +6,7 @@ import sys
 
 from FlaskApp.scritps.data_retrieval.match_data import get_match_data
 from FlaskApp.scritps.data_retrieval import static_data
-from FlaskApp.scritps.data_retrieval.static_data import io
+from FlaskApp.scritps.data_retrieval.static_data import static_io
 from FlaskApp.scritps.data_analytics import data_filter
 from FlaskApp.scritps.config import config
 
@@ -38,8 +38,8 @@ def main():
 
 
 def create_champions_dict(minions_json):
-    minions = io.read_json('minions_by_id.json')
-    upgrades = io.read_json('upgrades_by_id.json')
+    minions = static_io.read_json('minions_by_id.json')
+    upgrades = static_io.read_json('upgrades_by_id.json')
     w = len(regions)
     for r in regions:
         minions_json[r] = {}
@@ -55,8 +55,8 @@ def create_champions_dict(minions_json):
 
 
 def populate_dict(minions_json):
-    minions_and_upgrades = io.read_json('minions_by_id.json')
-    minions_and_upgrades.update(io.read_json('upgrades_by_id.json'))
+    minions_and_upgrades = static_io.read_json('minions_by_id.json')
+    minions_and_upgrades.update(static_io.read_json('upgrades_by_id.json'))
     for r in regions:
         match_data_directory = os.path.join(config.match_data_directory, r.upper())
         matches = os.listdir(match_data_directory)

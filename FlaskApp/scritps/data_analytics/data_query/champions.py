@@ -44,15 +44,15 @@ def create_empty_result_dict(result, champions):
 
 
 def calculate_extras(result):
-    total_picks = 0
+    total_picks = 0.0
     for key, value in result.items():
         total_picks += value['won'] + value['lost']
-        champ_picks = value['won'] + value['lost']
-        value['winrate'] = float("%.3f" % (100 * (value['won'] / champ_picks)) if not champ_picks == 0 else '0')
+        champ_picks = float(value['won'] + value['lost'])
+        value['winrate'] = float("%.3f" % ((100 * (value['won'] / champ_picks)) if not champ_picks == 0 else 0))
 
     for key, value in result.items():
         champ_picks = value['won'] + value['lost']
-        value['pickrate'] = float("%.3f" % (100 * (champ_picks / total_picks)) if not total_picks == 0 else '0')
+        value['pickrate'] = float("%.3f" % ((100 * (champ_picks / total_picks)) if not total_picks == 0 else 0))
 
 if __name__ == '__main__':
     a = run_query()
