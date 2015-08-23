@@ -3,7 +3,8 @@ __author__ = 'Kishan'
 import os
 import sys
 import json
-from FlaskApp.FlaskApp.scritps.data_retrieval import url_requests
+
+from FlaskApp.scritps.data_retrieval import url_requests
 from FlaskApp.FlaskApp.scritps.config import config
 
 match_id_directory = config.match_ids_directory

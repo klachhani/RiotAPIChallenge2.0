@@ -7,7 +7,8 @@ import sys
 
 def write_json(dict, filename):
     path = os.path.join(os.path.dirname(__file__), 'data')
-    os.makedirs(path, exist_ok=True)
+    if not os.path.exists(path):
+        os.makedirs(path)
     os.chdir(path)
     with open(filename, 'w') as outfile:
         json.dump(dict, outfile)

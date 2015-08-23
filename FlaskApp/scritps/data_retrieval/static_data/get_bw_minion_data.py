@@ -1,8 +1,8 @@
 __author__ = 'Kishan'
 
-from FlaskApp.FlaskApp.scritps.data_retrieval import url_requests
-from FlaskApp.FlaskApp.scritps.config import config
-from FlaskApp.FlaskApp.scritps.data_retrieval.static_data import io
+from FlaskApp.scritps.data_retrieval import url_requests
+from FlaskApp.scritps.config import config
+from FlaskApp.scritps.data_retrieval.static_data import static_io
 
 
 def get_minions_by_id(region='euw'):
@@ -15,7 +15,7 @@ def get_minions_by_id(region='euw'):
         if 'group' in value and value['group'].startswith('BWMerc1'):
             minions_by_id[value['id']] = value['name']
 
-    io.write_json(minions_by_id, 'minions_by_id.json')
+    static_io.write_json(minions_by_id, 'minions_by_id.json')
 
 
 def get_minion_upgrades_by_id(region='euw'):
@@ -29,7 +29,7 @@ def get_minion_upgrades_by_id(region='euw'):
                 and not value['group'].startswith('BWMerc1'):
             upgrades_by_id[value['id']] = value['name']
 
-    io.write_json(upgrades_by_id, 'upgrades_by_id.json')
+    static_io.write_json(upgrades_by_id, 'upgrades_by_id.json')
 
 
 def main():

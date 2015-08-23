@@ -1,13 +1,14 @@
 __author__ = 'Kishan'
 
-from FlaskApp.FlaskApp.scritps.data_retrieval.match_data import get_match_data
-from FlaskApp.FlaskApp.scritps.data_retrieval import static_data
-from FlaskApp.FlaskApp.scritps.data_retrieval.static_data import io
-from FlaskApp.FlaskApp.scritps.data_analytics import data_filter
-from FlaskApp.FlaskApp.scritps.config import config
 import json
 import os
 import sys
+
+from FlaskApp.scritps.data_retrieval.match_data import get_match_data
+from FlaskApp.scritps.data_retrieval import static_data
+from FlaskApp.scritps.data_retrieval.static_data import io
+from FlaskApp.scritps.data_analytics import data_filter
+from FlaskApp.scritps.config import config
 
 regions = get_match_data.get_match_regions()  # Only 'br'
 

@@ -1,15 +1,15 @@
 __author__ = 'Kishan'
 
-from FlaskApp.FlaskApp.scritps.data_retrieval.match_data import get_match_data
-from FlaskApp.FlaskApp.scritps.data_retrieval import static_data
-from FlaskApp.FlaskApp.scritps.data_retrieval.static_data import io
-from FlaskApp.FlaskApp.scritps.data_analytics import data_filter
-from FlaskApp.FlaskApp.scritps.config import config
 import json
 import os
 import sys
 
-regions = get_match_data.get_match_regions() # Only 'br'
+from FlaskApp.scritps.data_retrieval import static_data
+from FlaskApp.scritps.data_retrieval.static_data import static_io
+from FlaskApp.scritps.data_analytics import data_filter
+from FlaskApp.scritps.config import config
+
+regions = static_data.regions # Only 'br'
 
 print('\nCHAMPIONS\n')
 
@@ -37,7 +37,7 @@ def main():
 
 
 def create_champions_dict(dict):
-    champion_keys = io.read_json('champions_by_id.json')
+    champion_keys = static_io.read_json('champions_by_id.json')
     for r in regions:
         dict[r] = {}
         for hast in static_data.highest_achieved_season_tier:

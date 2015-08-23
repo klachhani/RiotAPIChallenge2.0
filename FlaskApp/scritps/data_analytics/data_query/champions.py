@@ -1,8 +1,8 @@
 __author__ = 'Kishan'
 
-from FlaskApp.FlaskApp.scritps.data_analytics.data_query import io as query_io
-from FlaskApp.FlaskApp.scritps.data_retrieval.static_data import io as static_io
-from FlaskApp.FlaskApp.scritps.data_retrieval import static_data
+from FlaskApp.scritps.data_analytics.data_query import query_io as query_io
+from FlaskApp.scritps.data_retrieval.static_data import static_io as static_io
+from FlaskApp.scritps.data_retrieval import static_data
 
 
 def run_query(regions = static_data.regions, tiers = static_data.highest_achieved_season_tier):

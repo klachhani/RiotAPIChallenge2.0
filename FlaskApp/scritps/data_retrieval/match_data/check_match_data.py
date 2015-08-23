@@ -1,10 +1,11 @@
 __author__ = 'Kishan'
 
-from FlaskApp.FlaskApp.scritps.config import config
-from FlaskApp.FlaskApp.scritps.data_retrieval.match_data import get_match_data
 import os
 import json
 import sys
+
+from FlaskApp.scritps.config import config
+from FlaskApp.scritps.data_retrieval.match_data import get_match_data
 
 match_data_directory = config.match_data_directory
 regions = get_match_data.get_match_regions()

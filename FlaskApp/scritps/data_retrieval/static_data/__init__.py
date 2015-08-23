@@ -13,7 +13,7 @@ regions = ['br',
            'eune',
            'euw',
            'kr',
-           'lan'
+           'lan',
            'las',
            'na',
            'oce',

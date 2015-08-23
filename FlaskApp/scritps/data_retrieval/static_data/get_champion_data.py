@@ -1,8 +1,8 @@
 __author__ = 'Kishan'
 
-from FlaskApp.FlaskApp.scritps.config import config
-from FlaskApp.FlaskApp.scritps.data_retrieval import url_requests
-from FlaskApp.FlaskApp.scritps.data_retrieval.static_data import io
+from FlaskApp.scritps.config import config
+from FlaskApp.scritps.data_retrieval import url_requests
+from FlaskApp.scritps.data_retrieval.static_data import static_io
 
 
 def get_champion_by_id(region='euw'):
@@ -11,7 +11,7 @@ def get_champion_by_id(region='euw'):
           + config.riot_api_key
 
     champion_by_id = url_requests.request(url)['keys']
-    io.write_json(champion_by_id, 'champions_by_id.json')
+    static_io.write_json(champion_by_id, 'champions_by_id.json')
 
 
 def main():

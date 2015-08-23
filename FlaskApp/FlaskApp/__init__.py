@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, flash, jsonify
-from FlaskApp.FlaskApp.scritps.data_analytics.data_query import champions
+from flask import Flask, render_template, request, jsonify
+
+from FlaskApp.scritps.data_analytics.data_query import champions
 
 app = Flask(__name__)
 app.debug = True
