@@ -3,7 +3,7 @@ __author__ = 'Kishan'
 import requests
 import sys
 from socket import gaierror
-import data_retrieval
+from FlaskApp.FlaskApp.scritps import data_retrieval
 
 max_attempts = data_retrieval.max_attempts
 

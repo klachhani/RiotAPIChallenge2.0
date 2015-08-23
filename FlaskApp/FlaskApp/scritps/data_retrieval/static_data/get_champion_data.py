@@ -1,8 +1,8 @@
 __author__ = 'Kishan'
 
-from config import config
-from data_retrieval import url_requests
-from  data_retrieval.static_data import io
+from FlaskApp.FlaskApp.scritps.config import config
+from FlaskApp.FlaskApp.scritps.data_retrieval import url_requests
+from FlaskApp.FlaskApp.scritps.data_retrieval.static_data import io
 
 
 def get_champion_by_id(region='euw'):

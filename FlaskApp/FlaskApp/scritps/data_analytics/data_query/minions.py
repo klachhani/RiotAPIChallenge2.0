@@ -1,9 +1,9 @@
 __author__ = 'Kishan'
 
-from data_retrieval.match_data import get_match_data
-from data_retrieval import static_data
-from data_retrieval.static_data import io as static_io
-from data_analytics.data_query import io as query_io
+from FlaskApp.FlaskApp.scritps.data_retrieval.match_data import get_match_data
+from FlaskApp.FlaskApp.scritps.data_retrieval import static_data
+from FlaskApp.FlaskApp.scritps.data_retrieval.static_data import io as static_io
+from FlaskApp.FlaskApp.scritps.data_analytics.data_query import io as query_io
 
 
 

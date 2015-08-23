@@ -1,7 +1,7 @@
 __author__ = 'Kishan'
 
-from config import config
-from data_retrieval.match_data import get_match_data
+from FlaskApp.FlaskApp.scritps.config import config
+from FlaskApp.FlaskApp.scritps.data_retrieval.match_data import get_match_data
 import os
 import json
 import sys

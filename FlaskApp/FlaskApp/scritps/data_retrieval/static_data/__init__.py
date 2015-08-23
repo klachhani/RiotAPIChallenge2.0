@@ -8,3 +8,14 @@ highest_achieved_season_tier = ['CHALLENGER',
                                 'SILVER',
                                 'BRONZE',
                                 'UNRANKED']
+
+regions = ['br',
+           'eune',
+           'euw',
+           'kr',
+           'lan'
+           'las',
+           'na',
+           'oce',
+           'ru',
+           'tr']

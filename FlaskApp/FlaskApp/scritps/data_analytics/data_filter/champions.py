@@ -1,10 +1,10 @@
 __author__ = 'Kishan'
 
-from data_retrieval.match_data import get_match_data
-from data_retrieval import static_data
-from data_retrieval.static_data import io
-from data_analytics import data_filter
-from config import config
+from FlaskApp.FlaskApp.scritps.data_retrieval.match_data import get_match_data
+from FlaskApp.FlaskApp.scritps.data_retrieval import static_data
+from FlaskApp.FlaskApp.scritps.data_retrieval.static_data import io
+from FlaskApp.FlaskApp.scritps.data_analytics import data_filter
+from FlaskApp.FlaskApp.scritps.config import config
 import json
 import os
 import sys

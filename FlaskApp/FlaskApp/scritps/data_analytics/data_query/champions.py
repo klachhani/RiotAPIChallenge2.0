@@ -1,12 +1,11 @@
 __author__ = 'Kishan'
 
-from data_analytics.data_query import io as query_io
-from data_retrieval.static_data import io as static_io
-from data_retrieval import static_data
-from data_retrieval.match_data import get_match_data
+from FlaskApp.FlaskApp.scritps.data_analytics.data_query import io as query_io
+from FlaskApp.FlaskApp.scritps.data_retrieval.static_data import io as static_io
+from FlaskApp.FlaskApp.scritps.data_retrieval import static_data
 
 
-def run_query(regions = get_match_data.get_match_regions(), tiers = static_data.highest_achieved_season_tier):
+def run_query(regions = static_data.regions, tiers = static_data.highest_achieved_season_tier):
     champions = static_io.read_json('champions_by_id.json')
 
     data = query_io.read_json('champions.json')

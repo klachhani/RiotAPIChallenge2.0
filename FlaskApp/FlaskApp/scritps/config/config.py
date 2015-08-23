@@ -1,7 +1,7 @@
 __author__ = 'Kishan'
 
 import configparser
-import config
+import FlaskApp.FlaskApp.scritps.config
 import os
 
 configuration = configparser.ConfigParser()
