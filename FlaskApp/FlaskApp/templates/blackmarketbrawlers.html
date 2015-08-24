@@ -1,0 +1,246 @@
+{% extends "main.html" %}
+{% block header %}
+<div class="jumbotron">
+    <h1 align="center">Black Market Brawlers</h1>
+</div>
+{% endblock %}
+
+{% block body %}
+<div>
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs nav-justified" role="tablist">
+        <li role="presentation" class="active"><a href="#Champions" aria-controls="Champions" role="tab"
+                                                  data-toggle="tab">Champions</a></li>
+        <li role="presentation"><a href="#Bans" aria-controls="Bans" role="tab" data-toggle="tab">Bans</a></li>
+        <li role="presentation"><a href="#Minions" aria-controls="Minions" role="tab" data-toggle="tab">Minions</a></li>
+        <li role="presentation"><a href="#Items" aria-controls="Items" role="tab" data-toggle="tab">Items</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="Champions">
+            <div class="container">
+                <div class="row" align="center" style="padding-top : 20px">
+                                            <button class="btn btn-primary" type="button" id="regions-all">Toggle All</button>
+
+                    <div class="btn-group " role="group" data-toggle="buttons-checkbox">
+
+                        {% for r in regions %}
+                        <button class="btn btn-default" type="button" id={{ r }} name="region"}>
+                            {{ r.upper() }}
+                        </button>
+                        {% endfor %}
+                    </div>
+                    <script>
+				$('#regions-all').click(function() {
+				var regions = {{ regions|tojson|safe }}
+				for (i in regions){
+					$('#'+regions[i]).button('toggle');
+				}
+				});
+                    </script>
+
+
+                </div>
+                <div class="row" align="center" style="padding-top : 20px">
+                    <button class="btn btn-primary" type="button" id="tiers-all">Toggle All</button>
+                    <div class="btn-group " role="group" data-toggle="buttons-checkbox">
+                        {% for t in tiers %}
+                        <button class="btn btn-default" type="button" name="tier" id={{ t }}>{{ t.title() }}</button>
+                        {% endfor %}
+                    </div>
+
+                    <script>
+				$('#tiers-all').click(function() {
+				var tiers = {{ tiers|tojson|safe }}
+				for (i in tiers){
+					$('#'+tiers[i]).button('toggle');
+				}
+				});
+                    </script>
+                </div>
+                <div class="row" align="center" style="padding-top : 20px">
+                    <div class="btn-group " role="group">
+                        <button type="button" id="winrate" class="btn btn-default" autocomplete="off">Win Rate</button>
+                        <button type="button" id="pickrate" class="btn btn-default" autocomplete="off">Pick Rate</button>
+
+                    </div>
+                </div>
+            </div>
+            <style>
+
+                .champ-chart rect {
+                fill: steelblue;
+                }
+
+                .champ-chart text {
+                fill: white;
+                font: 10px sans-serif;
+                text-anchor: end;
+                }
+
+            </style>
+            <div class="container" style="padding : 20px" id="chart-container">
+            <div class="panel panel-default" >
+                <div class="panel-heading">Cool stuff in this panel</div>
+                  <div class="panel-body">
+
+                        <svg id="champ-chart" class="champ-chart" style="padding-top : 20px">
+
+                        </svg>
+
+
+
+
+                  </div>
+            </div>
+                </div>
+
+
+
+            <script>
+					$('#pickrate').click(function () {;
+
+                        var regions = {{ regions|tojson|safe }};
+                        var tiers = {{ tiers|tojson|safe }};
+                        var query = []
+                        for (i in regions){
+                            if ($('#'+regions[i]).hasClass('active')){
+                            query.push('r='+regions[i]);
+                            }
+                        }
+                        for (i in tiers){
+                            if ($('#'+tiers[i]).hasClass('active')){
+                            query.push('t='+tiers[i]);
+                            }
+                        }
+                        query = query.join("&");
+                        query_url = '{{ url_for('get_results') }}' + "?" + query;
+
+                        $.getJSON(query_url, function(data){
+                            data = data.pickrate;
+
+                            //data = data.slice(0,19);
+
+                            var max = 0
+                            for (i in data){
+                                max = Math.max(max, data[i][2])
+                            }
+
+                            console.log(data.length);
+
+
+                            var width = $('#chart-container').width()-60;
+                            var barHeight = 35;
+
+                            var x = d3.scale.linear()
+                                .domain([0, max])
+                                .range([0, width]);
+
+                            var chart = d3.select(".champ-chart")
+                                .attr("width", width)
+                                .attr("height", barHeight * (data.length + 1));
+
+
+                            chart.selectAll("g").remove();
+
+                            var bar = chart.selectAll("g")
+                                .data(data)
+                                .enter().append("g")
+                                .attr("transform", function(d, i) {return "translate(" + 0 + "," + i * barHeight + ")";});
+
+                            bar.append("rect")
+                                .attr("width", function(d) { return x(d[2]);})
+                                .attr("height", barHeight - 1);
+
+                            bar.append("text")
+                                .attr("x", function(d) { return x(d[2]) - 3; })
+                                .attr("y", barHeight / 2)
+                                .attr("dy", ".35em")
+                                .text(function(d) { return d[1] + " - " + d[2] +"% - " + d[3]; });
+
+
+                        });
+
+				    });
+
+
+            </script>
+            <script>
+					$('#winrate').click(function () {;
+
+                        var regions = {{ regions|tojson|safe }};
+                        var tiers = {{ tiers|tojson|safe }};
+                        var query = []
+                        for (i in regions){
+                            if ($('#'+regions[i]).hasClass('active')){
+                            query.push('r='+regions[i]);
+                            }
+                        }
+                        for (i in tiers){
+                            if ($('#'+tiers[i]).hasClass('active')){
+                            query.push('t='+tiers[i]);
+                            }
+                        }
+                        query = query.join("&");
+                        query_url = '{{ url_for('get_results') }}' + "?" + query;
+
+                        $.getJSON(query_url, function(data){
+                            data = data.winrate;
+
+                            //data = data.slice(0,19);
+
+                            var max = 0
+                            for (i in data){
+                                max = Math.max(max, data[i][2])
+                            }
+
+                            console.log(data.length);
+
+
+                            var width = $('#chart-container').width()-60;
+                            var barHeight = 35;
+
+                            var x = d3.scale.linear()
+                                .domain([0, max])
+                                .range([0, width]);
+
+                            var chart = d3.select(".champ-chart")
+                                .attr("width", width)
+                                .attr("height", barHeight * (data.length + 1));
+
+
+                            chart.selectAll("g").remove();
+
+                            var bar = chart.selectAll("g")
+                                .data(data)
+                                .enter().append("g")
+                                .attr("transform", function(d, i) {return "translate(" + 0 + "," + i * barHeight + ")";});
+
+                            bar.append("rect")
+                                .attr("width", function(d) { return x(d[2]);})
+                                .attr("height", barHeight - 1);
+
+                            bar.append("text")
+                                .attr("x", function(d) { return x(d[2]) - 3; })
+                                .attr("y", barHeight / 2)
+                                .attr("dy", ".35em")
+                                .text(function(d) { return d[1] + " - " + d[2] +"%"; });
+
+
+                        });
+
+				    });
+
+
+            </script>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="Bans">Hello</div>
+        <div role="tabpanel" class="tab-pane fade" id="Minions">...</div>
+        <div role="tabpanel" class="tab-pane fade" id="Items">...</div>
+    </div>
+
+
+</div>
+{% endblock %}
