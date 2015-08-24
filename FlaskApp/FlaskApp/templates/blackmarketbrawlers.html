@@ -40,6 +40,7 @@
 					$('#regions-all').button('reset');
 				});
 
+
                     </script>
                 </div>
                 <div class="row" align="center" style="padding-top : 20px">
@@ -58,54 +59,104 @@
 				}
 				});
 
+
                     </script>
                 </div>
                 <div class="row" align="center" style="padding-top : 20px">
                     <button type="button" id="go" class="btn btn-primary" data-loading-text="loading stuff..."
                             autocomplete="off">GO
                     </button>
-                    <script>
-					$('#go').click(function () {
-					var orig_text = $(this).text()
-					
-					var regions = {{ regions|tojson|safe }}
-					var tiers = {{ tiers|tojson|safe }}
-					
-					var query_regions = []
-					var query_tiers = []
-					
-					for (i in regions){
-						if ($('#'+regions[i]).hasClass('active')){
-						query_regions.push(regions[i])
-						}
-					}
-					
-					for (i in tiers){
-						if ($('#'+tiers[i]).hasClass('active')){
-						query_tiers.push(tiers[i])
-						}
-					}
-					
-					$.ajax({
-						type: 'POST',
-						contentType: 'application/json',
-						url: "/blackmarketbrawlers/query",
-						data: JSON.stringify({
-							regions : query_regions, 
-							tiers: query_tiers
-						}),
-						success: function (data) {
-							console.log(data.query_regions);
-							console.log(data.query_tiers);
-						},
-						dataType: "json"
-					});		
-				  });			  
 
-                    </script>
 
                 </div>
             </div>
+            <style>
+
+                .champ-chart rect {
+                fill: steelblue;
+                }
+
+                .champ-chart text {
+                fill: white;
+                font: 10px sans-serif;
+                text-anchor: end;
+                }
+
+            </style>
+            <div class="container" id="chart-container">
+
+                <svg id="champ-chart" style="padding-top : 25px" class="champ-chart">
+
+                </svg>
+            </div>
+
+
+            <script>
+					$('#go').click(function () {;
+
+                        var regions = {{ regions|tojson|safe }};
+                        var tiers = {{ tiers|tojson|safe }};
+                        var query = []
+                        for (i in regions){
+                            if ($('#'+regions[i]).hasClass('active')){
+                            query.push('r='+regions[i]);
+                            }
+                        }
+                        for (i in tiers){
+                            if ($('#'+tiers[i]).hasClass('active')){
+                            query.push('t='+tiers[i]);
+                            }
+                        }
+                        query = query.join("&");
+                        query_url = '{{ url_for('get_results') }}' + "?" + query;
+
+                        $.getJSON(query_url, function(data){
+                            data = data.pickrate;
+
+                            var max = 0
+                            for (i in data){
+                                max = Math.max(max, data[i][2])
+                            }
+
+                            console.log(data.length);
+
+
+                            var width = $('#chart-container').width();
+                            var barHeight = 30;
+
+                            var x = d3.scale.linear()
+                                .domain([0, max])
+                                .range([0, width]);
+
+                            var chart = d3.select(".champ-chart")
+                                .attr("width", width)
+                                .attr("height", barHeight * data.length);
+
+
+                            chart.selectAll("g").remove();
+
+                            var bar = chart.selectAll("g")
+                                .data(data)
+                                .enter().append("g")
+                                .attr("transform", function(d, i) {return "translate(0," + i * barHeight + ")";});
+
+                            bar.append("rect")
+                                .attr("width", function(d) { return x(d[2]);})
+                                .attr("height", barHeight - 1);
+
+                            bar.append("text")
+                                .attr("x", function(d) { return x(d[2]) - 3; })
+                                .attr("y", barHeight / 2)
+                                .attr("dy", ".35em")
+                                .text(function(d) { return d[1]; });
+
+
+                        });
+
+				    });
+
+
+            </script>
         </div>
         <div role="tabpanel" class="tab-pane fade" id="Bans">Hello</div>
         <div role="tabpanel" class="tab-pane fade" id="Minions">...</div>

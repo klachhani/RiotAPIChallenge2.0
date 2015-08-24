@@ -1,13 +1,18 @@
 import sys
 from flask import Flask, render_template, request, jsonify
 
-sys.path.append('/var/www/RiotAPIChallenge2.0')
+#sys.path.append('/var/www/RiotAPIChallenge2.0')
 from FlaskApp.scritps.data_analytics.data_query import champions
+from FlaskApp.scritps.data_analytics.data_query import *
+
+
 
 app = Flask(__name__)
 app.debug = True
 app.config['SECRET_KEY'] = 'Kishan144'
 
+REGIONS = ['br', 'eune', 'euw', 'kr', 'lan', 'las', 'na', 'oce', 'ru', 'tr']
+TIERS = ['UNRANKED', 'BRONZE', 'SILVER', 'GOLD', 'PLATINUM', 'DIAMOND', 'MASTER', 'CHALLENGER']
 
 @app.route('/')
 def homepage():
@@ -16,28 +21,17 @@ def homepage():
 
 @app.route('/blackmarketbrawlers')
 def blackmarketbrawlers():
-    regions = ['br', 'eune', 'euw', 'kr', 'lan', 'las', 'na', 'oce', 'ru', 'tr']
-    tiers = ['UNRANKED', 'BRONZE', 'SILVER', 'GOLD', 'PLATINUM', 'DIAMOND', 'MASTER', 'CHALLENGER']
-    return render_template("blackmarketbrawlers.html", regions=regions, tiers=tiers)
 
-@app.route('/blackmarketbrawlers/query', methods=['GET', 'POST'])
+    return render_template("blackmarketbrawlers.html", regions=REGIONS, tiers=TIERS)
+
+
+@app.route('/blackmarketbrawlers/champions', methods=['GET'])
 def get_results():
-    regions = []
-    tiers = []
 
-    if request.method == 'POST':
-		regions = request.json['regions']
-		print(regions)
-		tiers = request.json['tiers']
-		print(tiers)
-
-    if request.method == 'GET':
-        result = champions.run_query(regions=regions, tiers=tiers)
-        result = jsonify(result)
-        return result
-
-    return 'none'
-
+    regions = request.args.getlist('r')
+    tiers = request.args.getlist('t')
+    result = champions.run_query(regions=regions, tiers=tiers)
+    return jsonify(result)
 
 @app.route('/about')
 def about():
@@ -45,4 +39,4 @@ def about():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run()
