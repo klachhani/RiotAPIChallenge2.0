@@ -20,20 +20,20 @@ def main():
     writedict(bans_json, "test3")
     print("done")
 
-def idlist():
+def idlist(): #Creates list of champion id
     id=[]
     for ids in champ_keys.get_champion_key_by_id("br"):
         id.append(int(ids))
     return id
 
-def dictcreate(bans_json):
+def dictcreate(bans_json): #creates empty dictionary
     bans_json["region"] = {}
     id=idlist()
-    for i in regions:
+    for i in regions: #cycles through reigons
         bans_json["region"][str(i)] = {}
-        for b in id:
+        for b in id: #Cycles through champs
             bans_json["region"][str(i)][b] = {"total":0}
-            for a in banorder:
+            for a in banorder: # puts banorders
                 bans_json["region"][str(i)][b][str(a)] = {"win":0,"loss":0,"total":0}
 
 def dictfill(bans_json):
@@ -49,10 +49,10 @@ def dictfill(bans_json):
                     data = json.load(f) #load match file as json
                 except:
                     pass
-        for n in range(0,2):
-            if "bans" in data["teams"][n]:
-                k=len(data["teams"][n]["bans"])
-                for m in range(0,k):
+        for n in range(0,2): #Takes information from data file
+            if "bans" in data["teams"][n]: #see if banned champions
+                k=len(data["teams"][n]["bans"]) #Checks how many banned
+                for m in range(0,k): #cycles through bans
                     t=data["teams"][n]["bans"][m]["pickTurn"] -1
                     champid=data["teams"][n]["bans"][m]["championId"]
                     bans_json["region"]["br"][int(champid)]["total"]+= 1
@@ -62,10 +62,10 @@ def dictfill(bans_json):
                     else:
                         bans_json["region"]["br"][int(champid)][banorder[t]]["win"]+=1
             else:
-                print(matchdata)
+                print(matchdata) #optional to see what matches bans were not made
                 print(n)
 
-def writedict(bans_json,name):
+def writedict(bans_json,name): #saves jason
     os.chdir(os.path.dirname(__file__))
     with open(name+'.json', 'w')as f:
         json.dump(bans_json,f)
