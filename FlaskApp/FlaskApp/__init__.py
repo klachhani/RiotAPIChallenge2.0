@@ -3,8 +3,6 @@ from flask import Flask, render_template, request, jsonify
 
 #sys.path.append('/var/www/RiotAPIChallenge2.0')
 from FlaskApp.scritps.data_analytics.data_query import champions
-from FlaskApp.scritps.data_analytics.data_query import *
-
 
 
 app = Flask(__name__)

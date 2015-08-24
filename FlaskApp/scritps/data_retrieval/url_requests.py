@@ -2,6 +2,7 @@ __author__ = 'Kishan'
 
 import sys
 from socket import gaierror
+import time
 
 import requests
 
@@ -25,6 +26,7 @@ def request(url, region='', progress_counter=-1):
         else:
             statuscode_not_ok = True
             attempts += 1
+            time.sleep(1)
             if not progress_counter == -1:
                 progress_countdown_error(region, progress_counter,
                                          data, attempts, max_attempts)
