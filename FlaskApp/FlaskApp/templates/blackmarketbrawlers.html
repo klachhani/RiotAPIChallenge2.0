@@ -25,35 +25,21 @@
             <div class="container">
                 <div class="row" align="center" style="padding-top : 20px">
                     <button class="btn btn-primary" type="button" id="regions-all" onclick="champRegionToggle()">Toggle All</button>
-
                     <div class="btn-group " role="group" data-toggle="buttons-checkbox">
-
                         {% for r in regions %}
-                        <button class="btn btn-default" type="button" id={{ "champions-" + r }}> {{ r.upper() }} </button>
+                        <button class="btn btn-default" type="button" onclick="champQuery()" id={{ "champions-" + r }}> {{ r.upper() }} </button>
                         {% endfor %}
                     </div>
-
-
-
-
                 </div>
                 <div class="row" align="center" style="padding-top : 20px">
                     <button class="btn btn-primary" type="button" id="tiers-all" onclick="champTierToggle()">Toggle All</button>
                     <div class="btn-group " role="group" data-toggle="buttons-checkbox">
                         {% for t in tiers %}
-                        <button class="btn btn-default" type="button" name="tier" id={{ "champions-" + t }}>{{ t.title() }}</button>
+                        <button class="btn btn-default" type="button" name="tier" onclick="champQuery()" id={{ "champions-" + t }}>{{ t.title() }}</button>
                         {% endfor %}
                     </div>
                 </div>
-                <div class="row" align="center" style="padding-top : 20px">
-                    <div class="btn-group " role="group">
-                        <button type="button" id="winrate" class="btn btn-default" autocomplete="off" onclick="getChampWinRate()">Win Rate</button>
-                        <button type="button" id="pickrate" class="btn btn-default" autocomplete="off" onclick="getChampPickRate()">Pick Rate</button>
-
-                    </div>
-                </div>
             </div>
-
             <style>
 
                 rect {
@@ -62,26 +48,91 @@
 
                 text {
                     fill: white;
-                    font: 20px sans-serif;
+                    font: 15px sans-serif;
                     text-anchor: end;
                 }
 
+                .panel-heading a:after {
+                    font-family:'Glyphicons Halflings';
+                    content:"\e114";
+                    float: right;
+                    color: grey;
+                }
 
+                .panel-heading a.collapsed:after {
+                    content:"\e080";
+                }
             </style>
             <div class="container" style="padding : 20px">
-                <div class="panel panel-default" >
-                    <div class="panel-heading">Cool stuff in this panel</div>
-                      <div class="panel-body" id="chart-container">
+                <!--<div class="row">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h5>
+                                <a data-toggle="collapse" data-target="#champ-scatter-panel">
+                                    Champion Scatter Plot
+                                </a>
+                            </h5>
+                        </div>
+                        <div class="panel-collapse collapse in" id="champ-scatter-panel">
+                            <div class="panel-body" style="height : 600px; overflow : auto">
+                                <svg id="champ-scatter-chart">
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h5>
+                                    <a data-toggle="collapse" data-target="#champ-pickrate-panel">
+                                        Champion Pick Rate
+                                    </a>
+                                </h5>
+                            </div>
+                            <div class="panel-collapse collapse in" id="champ-pickrate-panel">
+                                <div class="panel-body" style="height : 515px; overflow : auto">
+                                    <svg id="champ-pickrate-chart">
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                        <svg id="champ-chart" class="champ-chart">
+                    <div class="col-lg-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h5>
+                                    <a data-toggle="collapse" data-target="#champ-winrate-panel">
+                                        Champion Win Rate
+                                    </a>
+                                </h5>
+                            </div>
+                            <div class="panel-collapse collapse in" id="champ-winrate-panel">
+                                <div class="panel-body" style="height : 515px; overflow : auto">
+                                    <svg id="champ-winrate-chart">
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                        </svg>
-                  </div>
+
+
+                </div>
+
+
+
+
+
+
+
+
+
+
+
             </div>
-        </div>
-
-
-
 
 
         </div>
@@ -91,22 +142,30 @@
     </div>
 
     <script>
+
         function champRegionToggle(){
             toggle({{ regions|tojson|safe }}, "champions");
+            champBarChart( {{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}', 'pickrate');
+            champBarChart( {{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}', 'winrate');
+            champScatterPlot({{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}');
         }
 
         function champTierToggle(){
             toggle({{ tiers|tojson|safe }}, "champions");
+            champBarChart( {{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}', 'pickrate');
+            champBarChart( {{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}', 'winrate');
+            champScatterPlot({{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}');
         }
 
-        function getChampPickRate(){
-            champChart( {{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}', 'pickrate');
+        function champQuery(){
+            champBarChart( {{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}', 'pickrate');
+            champBarChart( {{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}', 'winrate');
+            champScatterPlot({{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}');
         }
 
-        function getChampWinRate(){
-            champChart( {{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}', 'winrate');
-        }
-
+    champBarChart( {{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}', 'pickrate');
+    champBarChart( {{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}', 'winrate');
+    champScatterPlot({{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}');
     </script>
 
 

@@ -15,34 +15,38 @@ function getQueryURL(regions, tiers, category, results_url){
     return results_url + "?" + query;
 }
 
-function champChart(regions, tiers, results_url, mode) {
+function champBarChart(regions, tiers, results_url, mode) {
 
     query_url = getQueryURL(regions, tiers, 'champions', results_url);
 
     $.getJSON(query_url, function(data){
         if (mode == 'pickrate'){
             data = data.pickrate;
+            panel = '#champ-pickrate-panel';
+            chart = '#champ-pickrate-chart';
         } else {
             data = data.winrate;
+            panel = '#champ-winrate-panel';
+            chart = '#champ-winrate-chart';
         }
-        data = data.slice(0,19);
         var max = 0
 
         for (i in data){
             max = Math.max(max, data[i][2])
         }
 
-        var width = $('#chart-container').width();
+        var width = $(panel).width();
         var barHeight = 50;
         var startwidth = 50;
 
         var x = d3.scale.linear()
             .domain([0, max])
-            .range([0, width-startwidth]);
+            .range([0, (width-startwidth)*0.9]);
 
-        var chart = d3.select(".champ-chart")
-            .attr("width", width)
-            .attr("height", barHeight * (data.length + 1));
+        var chart = d3.select(chart)
+            .attr("width", width*0.9)
+            .style("height", barHeight * data.length + 1);
+
 
 
         //update bars
@@ -97,9 +101,9 @@ function champChart(regions, tiers, results_url, mode) {
             .attr("transform", function(d, i) {return "translate(" + (x(d[2]) + startwidth/2) + "," + i * barHeight + ")";})
             .text(function(d){
                     if (mode == 'pickrate'){
-                            return d[1] + '      ' + d[2] + '%      ' + d[3];
+                            return d[2] + '% ' + d[3];
                         } else {
-                            return d[1] + '      ' + d[2] + '%';
+                            return d[2] + '%';
                         }
 
             });
@@ -110,9 +114,9 @@ function champChart(regions, tiers, results_url, mode) {
             .attr("dy", barHeight/2 + 5)
             .text(function(d){
                     if (mode == 'pickrate'){
-                            return d[1] + '      ' + d[2] + '%      ' + d[3];
+                            return d[2] + '%      ' + d[3];
                         } else {
-                            return d[1] + '      ' + d[2] + '%';
+                            return d[2] + '%';
                         }
                 });
 
@@ -121,67 +125,97 @@ function champChart(regions, tiers, results_url, mode) {
     });
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function champWinRate(regions, tiers, results_url) {
+function champScatterPlot(regions, tiers, results_url) {
 
     query_url = getQueryURL(regions, tiers, 'champions', results_url);
 
     $.getJSON(query_url, function(data){
-        data = data.winrate;
+        panel = '#champ-scatter-panel';
+        chart = '#champ-scatter-chart';
 
-        var max = 0
-        for (i in data){
-            max = Math.max(max, data[i][2])
+        var max_pickrate = 0
+        var max_winrate = 0
+
+        for (i in data.winrate){
+            max_winrate = Math.max(max_winrate, data.winrate[i][2]);
         }
 
-        console.log(data.length);
+        for (i in data.pickrate){
+            max_pickrate = Math.max(max_pickrate, data.pickrate[i][2]);
+        }
 
 
-        var width = $('#chart-container').width()-60;
-        var barHeight = 35;
-
-        var x = d3.scale.linear()
-            .domain([0, max])
-            .range([0, width]);
-
-        var chart = d3.select(".champ-chart")
-            .attr("width", width)
-            .attr("height", barHeight * (data.length + 1));
+        scatterset = []
+        for (i in data.pickrate){
+            scatterset.push([data.pickrate[i][0],
+                            data.pickrate[i][1],
+                            data.pickrate[i][2],
+                            data.winrate[i][2]]);
+        }
 
 
-        chart.selectAll("g").remove();
+        var width = $(panel).width();
+        var height = $(panel).height();
 
-        var bar = chart.selectAll("g")
-            .data(data)
-            .enter().append("g")
-            .attr("transform", function(d, i) {return "translate(" + 0 + "," + i * barHeight + ")";});
+        var x = d3.scale.log()
+            .base(Math.E)
+            .domain([Math.exp(1), max_pickrate])
+            .range([0, width*0.9]);
 
-        bar.append("rect")
-            .attr("width", function(d) { return x(d[2]);})
-            .attr("height", barHeight - 1);
+        var y = d3.scale.log()
+            .base(Math.E)
+            .domain([Math.exp(1), max_winrate])
+            .range([0, height*0.9]);
 
-        bar.append("text")
-            .attr("x", function(d) { return x(d[2]) - 3; })
-            .attr("y", barHeight / 2)
-            .attr("dy", ".35em")
-            .text(function(d) { return d[1] + " - " + d[2] +"%"; });
+        var chart = d3.select(chart)
+            .attr("width", width*0.9)
+            .style("height", height*0.9);
+
+        var circles = chart.selectAll("circle").data(scatterset);
+
+        circles.attr("cx", function(d){ return x(d[2]);})
+            .attr("cy", function(d){ return y(d[3]);})
+            .attr("r", 5);
+
+        circles.enter().append("circle")
+            .attr("cx", function(d){ return x(d[2]);})
+            .attr("cy", function(d){ return y(d[3]);})
+            .attr("r", 5);
+
+        circles.exit().select("cirlce").remove();
+
+        var labels = chart.selectAll("text").data(scatterset);
+
+        labels.attr("x", function(d){ return x(d[2]);})
+            .attr("y", function(d){ return y(d[3]);})
+            .text(function(d) {return d[1];});
+
+        labels.enter().append("text")
+            .attr("x", function(d){ return x(d[2]);})
+            .attr("y", function(d){ return y(d[3]);})
+            .attr("font-family", "sans-serif")
+           .attr("font-size", "11px")
+           .attr("fill", "red")
+           .text(function(d) {return d[1];});
+
+
+        labels.exit().select("text").remove();
+
+
+
+
 
 
     });
+
 }
+
+
+
+
+
+
+
 
 
 

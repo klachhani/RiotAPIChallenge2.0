@@ -3,14 +3,15 @@ from flask import Flask, render_template, request, jsonify
 
 #sys.path.append('/var/www/RiotAPIChallenge2.0')
 from FlaskApp.scritps.data_analytics.data_query import champions
+from FlaskApp.scritps.data_retrieval import static_data
 
 
 app = Flask(__name__)
 app.debug = True
 app.config['SECRET_KEY'] = 'Kishan144'
 
-REGIONS = ['br', 'eune', 'euw', 'kr', 'lan', 'las', 'na', 'oce', 'ru', 'tr']
-TIERS = ['UNRANKED', 'BRONZE', 'SILVER', 'GOLD', 'PLATINUM', 'DIAMOND', 'MASTER', 'CHALLENGER']
+REGIONS = static_data.regions
+TIERS = static_data.highest_achieved_season_tier[::-1]
 
 @app.route('/')
 def homepage():
