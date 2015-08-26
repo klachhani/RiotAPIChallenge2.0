@@ -1,6 +1,6 @@
 __author__ = 'Kushil'
 import requests
-import config.config as config
+import FlaskApp.scritps.config.config as config
 
 def get_champion_key_by_id(region):
     return requests.get('https://global.api.pvp.net/api/lol/static-data/'
