@@ -27,7 +27,7 @@
                     <button class="btn btn-primary" type="button" id="regions-all" onclick="champRegionToggle()">Toggle All</button>
                     <div class="btn-group " role="group" data-toggle="buttons-checkbox">
                         {% for r in regions %}
-                        <button class="btn btn-default" type="button" onclick="champQuery()" id={{ "champions-" + r }}> {{ r.upper() }} </button>
+                        <button class="btn btn-default" type="button" id={{ "champions-" + r }}> {{ r.upper() }} </button>
                         {% endfor %}
                     </div>
                 </div>
@@ -35,9 +35,12 @@
                     <button class="btn btn-primary" type="button" id="tiers-all" onclick="champTierToggle()">Toggle All</button>
                     <div class="btn-group " role="group" data-toggle="buttons-checkbox">
                         {% for t in tiers %}
-                        <button class="btn btn-default" type="button" name="tier" onclick="champQuery()" id={{ "champions-" + t }}>{{ t.title() }}</button>
+                        <button class="btn btn-default" type="button" name="tier" id={{ "champions-" + t }}>{{ t.title() }}</button>
                         {% endfor %}
                     </div>
+                </div>
+                <div class="row" align="center" style="padding-top : 20px">
+                    <button class="btn btn-primary" type="button" id="champions-go" onclick="champQuery()">Go</button
                 </div>
             </div>
             <style>
@@ -145,27 +148,19 @@
 
         function champRegionToggle(){
             toggle({{ regions|tojson|safe }}, "champions");
-            champBarChart( {{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}', 'pickrate');
-            champBarChart( {{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}', 'winrate');
-            champScatterPlot({{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}');
         }
 
         function champTierToggle(){
             toggle({{ tiers|tojson|safe }}, "champions");
-            champBarChart( {{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}', 'pickrate');
-            champBarChart( {{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}', 'winrate');
-            champScatterPlot({{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}');
         }
 
         function champQuery(){
             champBarChart( {{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}', 'pickrate');
             champBarChart( {{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}', 'winrate');
-            champScatterPlot({{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}');
         }
 
     champBarChart( {{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}', 'pickrate');
     champBarChart( {{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}', 'winrate');
-    champScatterPlot({{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}');
     </script>
 
 
