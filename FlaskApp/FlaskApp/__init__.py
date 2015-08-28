@@ -1,7 +1,7 @@
 import sys
 from flask import Flask, render_template, request, jsonify
 
-#sys.path.append('/var/www/RiotAPIChallenge2.0')
+sys.path.insert(0, '/var/www/RiotAPIChallenge2.0/FlaskApp')
 from FlaskApp.scripts.data_analytics.data_query import champions
 from FlaskApp.scripts.data_retrieval import static_data
 
