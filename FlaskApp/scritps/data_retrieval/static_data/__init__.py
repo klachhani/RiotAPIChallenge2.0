@@ -19,3 +19,6 @@ regions = ['br',
            'oce',
            'ru',
            'tr']
+
+outcome = ['won',
+           'lost']

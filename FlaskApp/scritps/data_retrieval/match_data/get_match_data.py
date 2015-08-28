@@ -19,13 +19,14 @@ def main():
     match_ids = get_match_ids([os.path.join(
         config.match_ids_directory, x.upper() + '.json')
                                for x in regions])
-
     print('\n\nGetting Match Data...\n')
+
     for r in range(len(match_ids)):
         progress_counter = len(match_ids[r])
         for j in range(len(match_ids[r])):
             if file_exists(regions[r], match_ids[r][j]):
                 progress_counter -= 1
+                progress_countdown(progress_counter, regions[r])
                 continue
             match_data = get_match_data(regions[r], match_ids[r][j], progress_counter)
             progress_counter -= 1

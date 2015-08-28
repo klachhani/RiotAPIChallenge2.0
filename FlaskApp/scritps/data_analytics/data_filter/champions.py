@@ -9,10 +9,19 @@ from FlaskApp.scritps.data_retrieval.static_data import static_io
 from FlaskApp.scritps.data_analytics import data_filter
 from FlaskApp.scritps.config import config
 
-regions = static_data.regions # Only 'br'
+regions = [static_data.regions[0]] # Only 'br'
 
 print('\nCHAMPIONS\n')
 
+stat_titles = ['kills',
+               'assists',
+               'deaths',
+               'physicalDamageDealtToChampions',
+               'magicDamageDealtToChampions',
+               'trueDamageDealtToChampions',
+               'minionsKilled',
+               'goldEarned',
+               'wardsPlaced']
 
 def main():
     champions_json = {}
@@ -43,7 +52,14 @@ def create_champions_dict(dict):
         for hast in static_data.highest_achieved_season_tier:
             dict[r][hast] = {}
             for key, value in champion_keys.items():
-                dict[r][hast][key] = {'key': value, 'won': 0, 'lost': 0}
+                dict[r][hast][key] = {'won': {}, 'lost': {}}
+                for outcome, stats  in dict[r][hast][key].items():
+                    stats = dict[r][hast][key][outcome]
+                    stats['picks'] = 0
+                    stats['matchDuration'] = 0
+                    for t in stat_titles:
+                        stats[t] = 0
+                        stats[t + '-per5min'] = 0
 
 
 def populate_dict(dict):
@@ -63,9 +79,17 @@ def populate_dict(dict):
                     champion_id = p['championId']
                     team_id = p['teamId']
                     if win_team_id == team_id:
-                        dict[r][tier][str(champion_id)]['won'] += 1
+                        stats = dict[r][tier][str(champion_id)]['won']
+                        stats['picks'] += 1
+                        stats['matchDuration'] += data['matchDuration']
+                        for t in stat_titles:
+                            stats[t] += p['stats'][t]
                     else:
-                        dict[r][tier][str(champion_id)]['lost'] += 1
+                        stats = dict[r][tier][str(champion_id)]['lost']
+                        stats['matchDuration'] += data['matchDuration']
+                        stats['picks'] += 1
+                        for t in stat_titles:
+                            stats[t] += p['stats'][t]
             progress_counter -= 1
             data_filter.progress_countdown(progress_counter, r)
 

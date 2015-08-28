@@ -23,6 +23,7 @@
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane fade in active" id="Champions">
             <div class="container">
+
                 <div class="row" align="center" style="padding-top : 20px">
                     <button class="btn btn-primary" type="button" id="regions-all" onclick="champRegionToggle()">Toggle All</button>
                     <div class="btn-group " role="group" data-toggle="buttons-checkbox">
@@ -31,6 +32,8 @@
                         {% endfor %}
                     </div>
                 </div>
+
+
                 <div class="row" align="center" style="padding-top : 20px">
                     <button class="btn btn-primary" type="button" id="tiers-all" onclick="champTierToggle()">Toggle All</button>
                     <div class="btn-group " role="group" data-toggle="buttons-checkbox">
@@ -39,8 +42,19 @@
                         {% endfor %}
                     </div>
                 </div>
+
+
                 <div class="row" align="center" style="padding-top : 20px">
-                    <button class="btn btn-primary" type="button" id="champions-go" onclick="champQuery()">Go</button
+                    <button class="btn btn-primary" type="button" id="outcome-all" onclick="champOutcomeToggle()">Toggle All</button>
+                    <div class="btn-group " role="group" data-toggle="buttons-checkbox">
+                        <button class="btn btn-default" type="button" name="tier" id="champions-won">Won</button>
+                        <button class="btn btn-default" type="button" name="tier" id="champions-lost">Lost</button>
+                    </div>
+                </div>
+
+
+                <div class="row" align="center" style="padding-top : 20px">
+                    <button class="btn btn-primary" type="button" id="champions-go" onclick="champQuery()">Go</button>
                 </div>
             </div>
             <style>
@@ -59,7 +73,7 @@
                     font-family:'Glyphicons Halflings';
                     content:"\e114";
                     float: right;
-                    color: grey;
+                    color: white;
                 }
 
                 .panel-heading a.collapsed:after {
@@ -68,66 +82,208 @@
             </style>
             <div class="container" style="padding : 20px">
                 <div class="row">
-                    <div class="col-lg-6">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h5>
-                                    <a data-toggle="collapse" data-target="#champ-pickrate-panel">
-                                        Champion Pick Rate
-                                    </a>
-                                </h5>
-                            </div>
-                            <div class="panel-collapse collapse in" id="champ-pickrate-panel">
-                                <div class="panel-body" style="height : 515px; overflow : auto">
-                                    <svg id="champ-pickrate-chart">
-                                    </svg>
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h5>
+                                <a data-toggle="collapse" data-target="#champions-panel1" style="color : white">
+                                    Champion Pick/Win Rate
+                                </a>
+                            </h5>
+                        </div>
+                        <div class="panel-collapse collapnse in" id="champions-panel1">
+                            <div class="panel-body" style="height : 100%">
+                                <div class="col-md-6">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">Champion Pick Rate</div>
+                                        <div class="panel-collapse collapse in" id="champions-pickrate-panel">
+                                            <div class="panel-body" style="height : 515px; overflow : auto">
+                                                <svg id="champions-pickrate-chart">
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">Champion Win Rate</div>
+                                        <div class="panel-collapse collapse in" id="champions-winrate-panel">
+                                            <div class="panel-body" style="height : 515px; overflow : auto">
+                                                <svg id="champions-winrate-chart">
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="col-lg-6">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h5>
-                                    <a data-toggle="collapse" data-target="#champ-winrate-panel">
-                                        Champion Win Rate
-                                    </a>
-                                </h5>
-                            </div>
-                            <div class="panel-collapse collapse in" id="champ-winrate-panel">
-                                <div class="panel-body" style="height : 515px; overflow : auto">
-                                    <svg id="champ-winrate-chart">
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-
                 </div>
 
+                <div class="row">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h5>
+                                <a data-toggle="collapse" data-target="#champions-panel2" style="color : white">
+                                    Champion Kills/Deaths/Assists
+                                </a>
+                            </h5>
+                        </div>
+                        <div class="panel-collapse collapnse in" id="champions-panel2">
+                            <div class="panel-body" style="height : 100%">
+                                <div class="col-md-4">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">Kills</div>
+                                        <div class="panel-collapse collapse in" id="champions-kills-panel">
+                                            <div class="panel-body" style="height : 515px; overflow : auto">
+                                                <svg id="champions-kills-chart">
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
+                                <div class="col-md-4">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">Deaths</div>
+                                        <div class="panel-collapse collapse in" id="champions-deaths-panel">
+                                            <div class="panel-body" style="height : 515px; overflow : auto">
+                                                <svg id="champions-deaths-chart">
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
+                                <div class="col-md-4">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">Assists</div>
+                                        <div class="panel-collapse collapse in" id="champions-assists-panel">
+                                            <div class="panel-body" style="height : 515px; overflow : auto">
+                                                <svg id="champions-assists-chart">
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="row">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h5>
+                                <a data-toggle="collapse" data-target="#champions-panel3" style="color : white">
+                                    Damage Dealt to Champions
+                                </a>
+                            </h5>
+                        </div>
+                        <div class="panel-collapse collapnse in" id="champions-panel3">
+                            <div class="panel-body" style="height : 100%">
+                                <div class="col-md-4">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">Physical Damage</div>
+                                        <div class="panel-collapse collapse in" id="champions-physicalDamageDealtToChampions-panel">
+                                            <div class="panel-body" style="height : 515px; overflow : auto">
+                                                <svg id="champions-physicalDamageDealtToChampions-chart">
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
+                                <div class="col-md-4">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">Magic Damage</div>
+                                        <div class="panel-collapse collapse in" id="champions-magicDamageDealtToChampions-panel">
+                                            <div class="panel-body" style="height : 515px; overflow : auto">
+                                                <svg id="champions-magicDamageDealtToChampions-chart">
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
+                                <div class="col-md-4">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">True Damage</div>
+                                        <div class="panel-collapse collapse in" id="champions-trueDamageDealtToChampions-panel">
+                                            <div class="panel-body" style="height : 515px; overflow : auto">
+                                                <svg id="champions-trueDamageDealtToChampions-chart">
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="row">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h5>
+                                <a data-toggle="collapse" data-target="#champions-panel4" style="color : white">
+                                    Miscellaneous
+                                </a>
+                            </h5>
+                        </div>
+                        <div class="panel-collapse collapnse in" id="champions-panel4">
+                            <div class="panel-body" style="height : 100%">
+                                <div class="col-md-4">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">Gold Earned</div>
+                                        <div class="panel-collapse collapse in" id="champions-goldEarned-panel">
+                                            <div class="panel-body" style="height : 515px; overflow : auto">
+                                                <svg id="champions-goldEarned-chart">
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
+                                <div class="col-md-4">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">Minions Killed</div>
+                                        <div class="panel-collapse collapse in" id="champions-minionsKilled-panel">
+                                            <div class="panel-body" style="height : 515px; overflow : auto">
+                                                <svg id="champions-minionsKilled-chart">
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-
+                                <div class="col-md-4">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">Wards Placed</div>
+                                        <div class="panel-collapse collapse in" id="champions-wardsPlaced-panel">
+                                            <div class="panel-body" style="height : 515px; overflow : auto">
+                                                <svg id="champions-wardsPlaced-chart">
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             </div>
-
-
-        </div></div>
+        </div>
+    </div>
         <div role="tabpanel" class="tab-pane fade" id="Bans">Hello</div>
         <div role="tabpanel" class="tab-pane fade" id="Minions">...</div>
         <div role="tabpanel" class="tab-pane fade" id="Items">...</div>
-    </div>
-
     <script>
+
+    regions = {{ regions|tojson|safe }};
+    tiers = {{ tiers|tojson|safe }};
+    url_results =  '{{ url_for('get_results') }}';
 
         function champRegionToggle(){
             toggle({{ regions|tojson|safe }}, "champions");
@@ -137,13 +293,36 @@
             toggle({{ tiers|tojson|safe }}, "champions");
         }
 
-        function champQuery(){
-            champBarChart( {{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}', 'pickrate');
-            champBarChart( {{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}', 'winrate');
+        function champOutcomeToggle(){
+            toggle(['won', 'lost'], "champions");
         }
 
-    champBarChart( {{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}', 'pickrate');
-    champBarChart( {{ regions|tojson|safe }}, {{ tiers|tojson|safe }}, '{{ url_for('get_results') }}', 'winrate');
+        function champQuery(){
+            champBarChart('champions', regions, tiers, url_results, 'pickrate', false, true);
+            champBarChart('champions', regions, tiers, url_results, 'winrate', false, true);
+            champBarChart('champions', regions, tiers, url_results, 'kills', false, true);
+            champBarChart('champions', regions, tiers, url_results, 'deaths', false, true);
+            champBarChart('champions', regions, tiers, url_results, 'assists', false, true);
+            champBarChart('champions', regions, tiers, url_results, 'physicalDamageDealtToChampions', false, true);
+            champBarChart('champions', regions, tiers, url_results, 'magicDamageDealtToChampions', false, true);
+            champBarChart('champions', regions, tiers, url_results, 'trueDamageDealtToChampions', false, true);
+            champBarChart('champions', regions, tiers, url_results, 'goldEarned', false, true);
+            champBarChart('champions', regions, tiers, url_results, 'minionsKilled', false, true);
+            champBarChart('champions', regions, tiers, url_results, 'wardsPlaced', false, true);
+        }
+
+    champBarChart('champions', regions, tiers, url_results, 'pickrate', false, true);
+    champBarChart('champions', regions, tiers, url_results, 'winrate', false, true);
+    champBarChart('champions', regions, tiers, url_results, 'kills', false, true);
+    champBarChart('champions', regions, tiers, url_results, 'deaths', false, true);
+    champBarChart('champions', regions, tiers, url_results, 'assists', false, true);
+    champBarChart('champions', regions, tiers, url_results, 'physicalDamageDealtToChampions', false, true);
+    champBarChart('champions', regions, tiers, url_results, 'magicDamageDealtToChampions', false, true);
+    champBarChart('champions', regions, tiers, url_results, 'trueDamageDealtToChampions', false, true);
+    champBarChart('champions', regions, tiers, url_results, 'goldEarned', false, true);
+    champBarChart('champions', regions, tiers, url_results, 'minionsKilled', false, true);
+    champBarChart('champions', regions, tiers, url_results, 'wardsPlaced', false, true);
+
     </script>
 
 
