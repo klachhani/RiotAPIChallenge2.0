@@ -11,6 +11,7 @@ app.config['SECRET_KEY'] = 'Kishan144'
 
 REGIONS = ['br', 'eune', 'euw', 'kr', 'lan', 'las', 'na', 'oce', 'ru', 'tr']
 TIERS = ['UNRANKED', 'BRONZE', 'SILVER', 'GOLD', 'PLATINUM', 'DIAMOND', 'MASTER', 'CHALLENGER']
+BANS = ["FIRST","SECOND","THIRD","FOURTH","FIFTH","SIXTH"]
 
 @app.route('/')
 def homepage():
@@ -20,7 +21,7 @@ def homepage():
 @app.route('/blackmarketbrawlers')
 def blackmarketbrawlers():
 
-    return render_template("blackmarketbrawlers.html", regions=REGIONS, tiers=TIERS)
+    return render_template("blackmarketbrawlers.html", regions=REGIONS, tiers=TIERS, bans=BANS)
 
 
 @app.route('/blackmarketbrawlers/champions', methods=['GET'])

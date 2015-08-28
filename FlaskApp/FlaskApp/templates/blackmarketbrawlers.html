@@ -236,7 +236,49 @@
 
             </script>
         </div>
-        <div role="tabpanel" class="tab-pane fade" id="Bans">Hello</div>
+
+        <div role="tabpanel" class="tab-pane fade" id="Bans">
+            <div class="container">
+                    <div class="row" align="center" style="padding-top : 20px">
+                                                <button class="btn btn-primary" type="button" id="regions-all">Toggle All</button>
+
+                        <div class="btn-group " role="group" data-toggle="buttons-checkbox">
+
+                            {% for r in regions %}
+                            <button class="btn btn-default" type="button" id={{ r }} name="region"}>
+                                {{ r.upper() }}
+                            </button>
+                            {% endfor %}
+                        </div>
+                        <script>
+                    $('#regions-all').click(function() {
+                    var regions = {{ regions|tojson|safe }}
+                    for (i in regions){
+                        $('#'+regions[i]).button('toggle');
+                    }
+                    });
+                        </script>
+
+                    </div>
+                    <div class="row" align="center" style="padding-top : 20px">
+                        <button class="btn btn-primary" type="button" id="bans-all">Toggle All</button>
+                        <div class="btn-group " role="group" data-toggle="buttons-checkbox">
+                            {% for t in bans %}
+                            <button class="btn btn-default" type="button" name="bans" id={{ t }}>{{ t.title() }}</button>
+                            {% endfor %}
+                        </div>
+
+                        <script>
+                    $('#bans-all').click(function() {
+                    var tiers = {{ bans|tojson|safe }}
+                    for (i in bans){
+                        $('#'+bans[i]).button('toggle');
+                    }
+                    });
+                        </script>
+                    </div>
+                    </div>
+            </div>
         <div role="tabpanel" class="tab-pane fade" id="Minions">...</div>
         <div role="tabpanel" class="tab-pane fade" id="Items">...</div>
     </div>
