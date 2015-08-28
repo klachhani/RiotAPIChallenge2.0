@@ -4,14 +4,12 @@ import json
 import os
 import sys
 
-from FlaskApp.scritps.data_retrieval import static_data
-from FlaskApp.scritps.data_retrieval.static_data import static_io
-from FlaskApp.scritps.data_analytics import data_filter
-from FlaskApp.scritps.config import config
+from FlaskApp.scripts.data_retrieval import static_data
+from FlaskApp.scripts.data_retrieval.static_data import static_io
+from FlaskApp.scripts.data_analytics import data_filter
+from FlaskApp.scripts.config import config
 
 regions = [static_data.regions[0]] # Only 'br'
-
-print('\nCHAMPIONS\n')
 
 stat_titles = ['kills',
                'assists',

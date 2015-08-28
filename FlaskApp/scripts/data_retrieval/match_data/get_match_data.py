@@ -4,8 +4,8 @@ import os
 import sys
 import json
 
-from FlaskApp.scritps.data_retrieval import url_requests
-from FlaskApp.scritps.config import config
+from FlaskApp.scripts.data_retrieval import url_requests
+from FlaskApp.scripts.config import config
 
 match_id_directory = config.match_ids_directory
 match_data_directory = config.match_data_directory

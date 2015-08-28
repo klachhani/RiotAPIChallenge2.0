@@ -2,10 +2,10 @@ from __future__ import division
 
 __author__ = 'Kishan'
 
-from FlaskApp.scritps.data_analytics.data_query import query_io as query_io
-from FlaskApp.scritps.data_retrieval.static_data import static_io as static_io
-from FlaskApp.scritps.data_retrieval import static_data
-from FlaskApp.scritps.data_analytics.data_filter import champions as champ
+from FlaskApp.scripts.data_analytics.data_query import query_io as query_io
+from FlaskApp.scripts.data_retrieval.static_data import static_io as static_io
+from FlaskApp.scripts.data_retrieval import static_data
+from FlaskApp.scripts.data_analytics.data_filter import champions as champ
 from collections import OrderedDict
 
 def run_query(regions, tiers):

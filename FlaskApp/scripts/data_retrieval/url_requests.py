@@ -3,9 +3,9 @@ __author__ = 'Kishan'
 import sys
 from pushbullet import PushBullet
 import requests
-from FlaskApp.scritps.config import config
+from FlaskApp.scripts.config import config
 
-from FlaskApp.scritps import data_retrieval
+from FlaskApp.scripts import data_retrieval
 
 max_attempts = data_retrieval.max_attempts
 pb = PushBullet(config.pushbullet_api_key)

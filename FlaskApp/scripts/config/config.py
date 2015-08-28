@@ -28,9 +28,3 @@ def read():
     data_directory = configuration.get('Directories', 'data')
     match_ids_directory = configuration.get('Sub-Directories', 'Match_Ids')
     match_data_directory = configuration.get('Sub-Directories', 'Match_Data')
-
-    print'Riot API Key: ' + riot_api_key
-    print'Pushbullet Access Token: ' + pushbullet_api_key
-    print'Data Directory: ' + data_directory
-    print'Match Ids Sub-Directory: ' + match_ids_directory
-    print'Match Data Sub-Directory: ' + match_data_directory

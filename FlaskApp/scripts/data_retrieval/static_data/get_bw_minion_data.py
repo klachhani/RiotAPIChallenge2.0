@@ -1,8 +1,8 @@
 __author__ = 'Kishan'
 
-from FlaskApp.scritps.data_retrieval import url_requests
-from FlaskApp.scritps.config import config
-from FlaskApp.scritps.data_retrieval.static_data import static_io
+from FlaskApp.scripts.data_retrieval import url_requests
+from FlaskApp.scripts.config import config
+from FlaskApp.scripts.data_retrieval.static_data import static_io
 
 
 def get_minions_by_id(region='euw'):
