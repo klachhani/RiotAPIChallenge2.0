@@ -45,16 +45,36 @@
 
 
                 <div class="row" align="center" style="padding-top : 20px">
-                    <button class="btn btn-primary" type="button" id="outcome-all" onclick="champOutcomeToggle()">Toggle All</button>
-                    <div class="btn-group " role="group" data-toggle="buttons-checkbox">
-                        <button class="btn btn-default" type="button" name="tier" id="champions-won">Won</button>
-                        <button class="btn btn-default" type="button" name="tier" id="champions-lost">Lost</button>
-                    </div>
+
+                        <button class="btn btn-primary" type="button" id="outcome-all" onclick="champOutcomeToggle()">Toggle All</button>
+                        <div class="btn-group " role="group" data-toggle="buttons-checkbox">
+
+                            <button class="btn btn-default" type="button" name="tier" id="champions-won">Won</button>
+                            <button class="btn btn-default" type="button" name="tier" id="champions-lost">Lost</button>
+                        </div>
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-default active" id="champions-descending">
+                                <input type="radio" autocomplete="off" value="true" checked>Descending
+                            </label>
+                            <label class="btn btn-default" id="champions-ascending">
+                                <input type="radio" autocomplete="off" value="false">Ascending
+                            </label>
+                        </div>
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-default active" id="champions-total" >
+                                <input type="radio" autocomplete="off" value="true" checked>Total
+                            </label>
+                            <label class="btn btn-default" id="champions-per5min">
+                                <input type="radio" autocomplete="off" value="false">Per 5 Minutes
+                            </label>
+                        </div>
+
                 </div>
 
 
                 <div class="row" align="center" style="padding-top : 20px">
                     <button class="btn btn-primary" type="button" id="champions-go" onclick="champQuery()">Go</button>
+
                 </div>
             </div>
             <style>
@@ -275,15 +295,15 @@
 
             </div>
         </div>
-    </div>
         <div role="tabpanel" class="tab-pane fade" id="Bans">Hello</div>
         <div role="tabpanel" class="tab-pane fade" id="Minions">...</div>
         <div role="tabpanel" class="tab-pane fade" id="Items">...</div>
+    </div>
     <script>
 
-    regions = {{ regions|tojson|safe }};
-    tiers = {{ tiers|tojson|safe }};
-    url_results =  '{{ url_for('get_results') }}';
+        regions = {{ regions|tojson|safe }};
+        tiers = {{ tiers|tojson|safe }};
+        results_url =  '{{ url_for('get_results') }}';
 
         function champRegionToggle(){
             toggle({{ regions|tojson|safe }}, "champions");
@@ -298,33 +318,21 @@
         }
 
         function champQuery(){
-            champBarChart('champions', regions, tiers, url_results, 'pickrate', false, true);
-            champBarChart('champions', regions, tiers, url_results, 'winrate', false, true);
-            champBarChart('champions', regions, tiers, url_results, 'kills', false, true);
-            champBarChart('champions', regions, tiers, url_results, 'deaths', false, true);
-            champBarChart('champions', regions, tiers, url_results, 'assists', false, true);
-            champBarChart('champions', regions, tiers, url_results, 'physicalDamageDealtToChampions', false, true);
-            champBarChart('champions', regions, tiers, url_results, 'magicDamageDealtToChampions', false, true);
-            champBarChart('champions', regions, tiers, url_results, 'trueDamageDealtToChampions', false, true);
-            champBarChart('champions', regions, tiers, url_results, 'goldEarned', false, true);
-            champBarChart('champions', regions, tiers, url_results, 'minionsKilled', false, true);
-            champBarChart('champions', regions, tiers, url_results, 'wardsPlaced', false, true);
+            championsBarChart("champions", regions, tiers, results_url)
         }
 
-    champBarChart('champions', regions, tiers, url_results, 'pickrate', false, true);
-    champBarChart('champions', regions, tiers, url_results, 'winrate', false, true);
-    champBarChart('champions', regions, tiers, url_results, 'kills', false, true);
-    champBarChart('champions', regions, tiers, url_results, 'deaths', false, true);
-    champBarChart('champions', regions, tiers, url_results, 'assists', false, true);
-    champBarChart('champions', regions, tiers, url_results, 'physicalDamageDealtToChampions', false, true);
-    champBarChart('champions', regions, tiers, url_results, 'magicDamageDealtToChampions', false, true);
-    champBarChart('champions', regions, tiers, url_results, 'trueDamageDealtToChampions', false, true);
-    champBarChart('champions', regions, tiers, url_results, 'goldEarned', false, true);
-    champBarChart('champions', regions, tiers, url_results, 'minionsKilled', false, true);
-    champBarChart('champions', regions, tiers, url_results, 'wardsPlaced', false, true);
+        champQuery()
 
     </script>
 
+<footer class="footer">
+	<div class="container">
+		[The title of Your Application] isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends &#xA9 Riot Games, Inc.
+	</div>
 
+</footer>
 </div>
 {% endblock %}
+
+
+
