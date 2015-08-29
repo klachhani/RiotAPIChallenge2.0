@@ -9,7 +9,7 @@ from FlaskApp.scripts.data_retrieval.static_data import static_io
 from FlaskApp.scripts.data_analytics import data_filter
 from FlaskApp.scripts.config import config
 
-regions = [static_data.regions[0]] # Only 'br'
+regions = static_data.regions
 
 stat_titles = ['kills',
                'assists',

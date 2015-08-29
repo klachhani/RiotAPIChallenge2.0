@@ -60,17 +60,17 @@ def query_champions_json(result, data, regions, tiers, outcome, champions):
                                                  + data[r][t][c]['lost'][s])
                 for o in outcome:
                     for s in champ.stat_titles:
-                        result[c][o][s + '-per5min'] = float("%.3f" % ((
-                            (result[c][o][s] / result[c][o]['matchDuration'] * 300
+                        result[c][o][s + '-per5min'] = float("%.3f" % (
+                            ((result[c][o][s] / result[c][o]['matchDuration'] * 300)
                              if not result[c][o]['matchDuration'] == 0 else 0)
                             if not o == 'total' else (
-                            (result[c]['won'][s + '-per5min'] + result[c]['lost'][s]) / (
+                            (result[c]['won'][s] + result[c]['lost'][s]) / ((
                                 result[c]['won']['matchDuration'] + result[c]['lost'][
-                                    'matchDuration']) * 300 if not (result[c]['won'][
+                                    'matchDuration']) * 300) if not (result[c]['won'][
                                                                         'matchDuration'] +
                                                                     result[c]['lost'][
                                                                         'matchDuration']) == 0
-                            else 0))))
+                            else 0)))
 
 
 def create_empty_result_dict(result, champions, outcome):
