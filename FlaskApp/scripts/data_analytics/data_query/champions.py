@@ -8,6 +8,7 @@ from FlaskApp.scripts.data_retrieval import static_data
 from FlaskApp.scripts.data_analytics.data_filter import champions as champ
 from collections import OrderedDict
 
+
 def run_query(regions, tiers):
     if len(regions) == 0:
         regions = static_data.regions
@@ -25,12 +26,11 @@ def run_query(regions, tiers):
     query_champions_json(result, data, regions, tiers, outcome, champions)
     calculate_extras(result)
 
-
     final_result = {}
     for o in outcome:
         final_result[o] = []
         for c in result:
-            dict = OrderedDict({'id' : c, 'name' : champions[c]['name'], 'key' : champions[c]['key']})
+            dict = OrderedDict({'id': c, 'name': champions[c]['name'], 'key': champions[c]['key']})
             dict.update(sorted((result[c][o]).items()))
             final_result[o].append(dict)
 
@@ -64,13 +64,8 @@ def query_champions_json(result, data, regions, tiers, outcome, champions):
                             ((result[c][o][s] / result[c][o]['matchDuration'] * 300)
                              if not result[c][o]['matchDuration'] == 0 else 0)
                             if not o == 'total' else (
-                            (result[c]['won'][s] + result[c]['lost'][s]) / ((
-                                result[c]['won']['matchDuration'] + result[c]['lost'][
-                                    'matchDuration']) * 300) if not (result[c]['won'][
-                                                                        'matchDuration'] +
-                                                                    result[c]['lost'][
-                                                                        'matchDuration']) == 0
-                            else 0)))
+                                (result[c]['total'][s] / result[c]['total']['matchDuration']) * 300)
+                            if not result[c]['total']['matchDuration'] == 0 else 0))
 
 
 def create_empty_result_dict(result, champions, outcome):
@@ -86,17 +81,19 @@ def create_empty_result_dict(result, champions, outcome):
 
 
 def calculate_extras(result):
-    total_picks = {'won' : 0, 'lost' : 0, 'total' : 0}
+    total_picks = {'won': 0, 'lost': 0, 'total': 0}
     for c in result:
         for o in result[c]:
             total_picks[o] += result[c][o]['picks']
         champ_picks = result[c]['won']['picks'] + result[c]['lost']['picks']
         result[c]['total']['winrate'] = result[c]['won']['winrate'] = result[c]['lost'][
-            'winrate'] = float("%.3f" % ((100 * result[c]['won']['picks'] / champ_picks) if not champ_picks == 0 else 0))
+            'winrate'] = float("%.3f" % (
+        (100 * result[c]['won']['picks'] / champ_picks) if not champ_picks == 0 else 0))
 
     for c in result:
         for o in result[c]:
-            result[c][o]['pickrate'] = float("%.3f" % ((100*result[c][o]['picks']/total_picks[o]) if not total_picks == 0 else 0))
+            result[c][o]['pickrate'] = float("%.3f" % (
+            (100 * result[c][o]['picks'] / total_picks[o]) if not total_picks == 0 else 0))
 
 
 if __name__ == '__main__':
