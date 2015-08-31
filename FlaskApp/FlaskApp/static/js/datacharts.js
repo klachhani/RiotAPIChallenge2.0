@@ -249,7 +249,7 @@ function formatDataString(mode, num){
         case /per5min/.test(mode):
             return numeral(num).format('0.000');
         default:
-            return numeral(num).format('0,0a');
+            return numeral(num).format('0.000a');
 
     }
 }
