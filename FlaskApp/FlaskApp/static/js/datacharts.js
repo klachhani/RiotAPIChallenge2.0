@@ -52,12 +52,18 @@ function championsBarChart(queryType, regions, tiers, results_url, champsSelecte
             per5min = per5minCharts[c];
 
             dataSorted = champsSelectedData.sort(function(a,b){
+            if (a[mode+per5min] == b[mode+per5min]){
+                if (a['name'] < b['name']) return 1;
+                if (a['name'] > b['name']) return -1;
+            } else
                 return parseFloat(a[mode+per5min])-parseFloat(b[mode+per5min]);
             });
 
             if (descending == true){dataSorted = dataSorted.reverse()}
 
             dataSorted = dataSorted.slice(0, champsLength);
+
+
 
             panel = '#' + queryType + '-' + mode + '-panel';
             chart = '#' + queryType + '-' + mode + '-chart';
@@ -109,25 +115,7 @@ function championsBarChart(queryType, regions, tiers, results_url, champsSelecte
                 .attr("width", function(d) { return x(d[mode]);});
 
 
-            bars.exit().select("rect")
-                .transition()
-                .duration(1000)
-                .delay(1000)
-                .attr("width", 0)
-                .remove();
-
-            bars.on("mouseover", function() {
-                d3.select(this)
-                .transition('mouseover')
-                .duration(50)
-                .style("fill", "rgb(50,100,160)");
-            }).on("mouseout", function() {
-                d3.select(this)
-                    .transition('mouseout')
-                    .duration(500)
-                    .style("fill", "rgb(70,130,180)");
-
-            });
+            bars.exit().remove();
 
             //update champ icon
             var img = chart.selectAll("image").data(dataSorted);
@@ -156,11 +144,7 @@ function championsBarChart(queryType, regions, tiers, results_url, champsSelecte
                 .duration(1000)
                 .style('opacity', 1);
 
-            img.exit().select("image")
-                .transition()
-                .duration(1000)
-                .style("opacity", 0)
-                .remove();
+            img.exit().remove();
 
             img.on("mouseover", function(){
                 icon = d3.select(this);
@@ -168,8 +152,13 @@ function championsBarChart(queryType, regions, tiers, results_url, champsSelecte
                 mode = icon.attr("id").split(",")[0];
                 id = icon.attr("id").split(",")[1];
 
+
                 hoverData = champsSelectedData.sort(function(a,b){
-                    return parseFloat(a[mode+per5min])-parseFloat(b[mode+per5min]);
+                if (a[mode] == b[mode]){
+                    if (a['name'] < b['name']) return 1;
+                    if (a['name'] > b['name']) return -1;
+                } else
+                    return parseFloat(a[mode])-parseFloat(b[mode]);
                 });
 
                 if (descending == true){hoverData = hoverData.reverse()}
@@ -197,36 +186,70 @@ function championsBarChart(queryType, regions, tiers, results_url, champsSelecte
 
 
                 d3.select(this.parentNode).append("rect")
+                    .attr("width", 0)
+                    .transition()
+                    .duration(500)
                     .attr("id", "gradientBar")
-                    .attr("width", 600)
+                    .attr("width", 500)
                     .attr("height", barHeight - 2)
                     .attr("x", startwidth)
                     .attr("y", transform[1])
                     .style("fill", "url(#gradient)");
 
                 d3.select(this.parentNode).append("text")
+                    .attr("fill-opacity", 0)
                     .attr("id", "barName")
-                    .attr("x", startwidth)
+                    .attr("x", startwidth + 10)
                     .attr("y", transform[1])
-                    .attr("dy", barHeight/2 - 10)
+                    .attr("dy", barHeight/2 - 5)
+                    .transition('dataName')
+                    .duration(250)
+                    .delay(250)
+                    .attr("fill-opacity", 1)
                     .text(function(){return hoverData[id]['name'];});
 
                 d3.select(this.parentNode).append("text")
+                    .attr("fill-opacity", 0)
                     .attr("id", "barStat")
-                    .attr("x", startwidth)
+                    .attr("x", startwidth + 10)
                     .attr("y", transform[1])
-                    .attr("dy", barHeight/2 + 10)
-                    .text(function(){return hoverData[id][mode];});
-
-                console.log(id + ' ' + mode);
-                console.log(hoverData[id][mode]);
+                    .attr("dy", barHeight/2 + 15)
+                    .transition('dataString')
+                    .duration(250)
+                    .delay(250)
+                    .attr("fill-opacity", 1)
+                    .text(function(){return formatDataString(mode, hoverData[id][mode]);});
 
             }).on("mouseout", function(){
-                d3.select('#gradientBar').remove();
-                d3.select('#barStat').remove();
-                d3.select('#barName').remove();
+                d3.selectAll('#gradientBar')
+                    .transition("gradientBarOut")
+                    .duration(1500)
+                    .style("opacity", 0)
+                    .remove();
+                d3.selectAll('#barStat')
+                    .transition("barStatOut")
+                    .duration(750)
+                    .style("fill-opacity", 0)
+                    .remove();
+                d3.selectAll('#barName')
+                    .transition("barNameOut")
+                    .duration(750)
+                    .style("fill-opacity", 0)
+                    .remove();
             });
 
         }
     });
+}
+
+function formatDataString(mode, num){
+    switch(true){
+        case /rate/.test(mode):
+            return numeral(num).format('0.000') + '%';
+        case /per5min/.test(mode):
+            return numeral(num).format('0.000');
+        default:
+            return numeral(num).format('0,0a');
+
+    }
 }
