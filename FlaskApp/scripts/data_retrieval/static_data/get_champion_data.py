@@ -18,6 +18,14 @@ def get_champion_by_id(region='euw'):
     static_io.write_json(champion_by_id, 'champions_by_id.json')
 
 
+def get_sorted_champions(sort_by):
+    champs = static_io.read_json('champions_by_id.json')
+    sorted_champions = []
+    for id, value in champs.items():
+        sorted_champions.append({'id': int(id), 'name': value['name'], 'key': value['key']})
+    sorted_champions = sorted(sorted_champions, key=lambda k: k[sort_by])
+    return sorted_champions
+
 def main():
     get_champion_by_id()
 

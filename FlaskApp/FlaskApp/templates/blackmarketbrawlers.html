@@ -46,47 +46,70 @@
 
                 <div class="row" align="center" style="padding-top : 20px">
 
-                        <button class="btn btn-primary" type="button" id="outcome-all" onclick="champOutcomeToggle()">Toggle All</button>
-                        <div class="btn-group " role="group" data-toggle="buttons-checkbox">
+                    <button class="btn btn-primary" type="button" id="outcome-all" onclick="champOutcomeToggle()">Toggle All</button>
+                    <div class="btn-group " role="group" data-toggle="buttons-checkbox">
 
-                            <button class="btn btn-default" type="button" name="tier" id="champions-won">Won</button>
-                            <button class="btn btn-default" type="button" name="tier" id="champions-lost">Lost</button>
-                        </div>
-                        <div class="btn-group" data-toggle="buttons">
-                            <label class="btn btn-default active" id="champions-descending">
-                                <input type="radio" autocomplete="off" value="true" checked>Descending
-                            </label>
-                            <label class="btn btn-default" id="champions-ascending">
-                                <input type="radio" autocomplete="off" value="false">Ascending
-                            </label>
-                        </div>
-                        <div class="btn-group" data-toggle="buttons">
-                            <label class="btn btn-default active" id="champions-total" >
-                                <input type="radio" autocomplete="off" value="true" checked>Total
-                            </label>
-                            <label class="btn btn-default" id="champions-per5min">
-                                <input type="radio" autocomplete="off" value="false">Per 5 Minutes
-                            </label>
-                        </div>
-
+                        <button class="btn btn-default" type="button" name="tier" id="champions-won">Won</button>
+                        <button class="btn btn-default" type="button" name="tier" id="champions-lost">Lost</button>
+                    </div>
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-default active" id="champions-descending">
+                            <input type="radio" autocomplete="off" value="true" checked>Descending
+                        </label>
+                        <label class="btn btn-default" id="champions-ascending">
+                            <input type="radio" autocomplete="off" value="false">Ascending
+                        </label>
+                    </div>
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-default active" id="champions-total" >
+                            <input type="radio" autocomplete="off" value="true" checked>Total
+                        </label>
+                        <label class="btn btn-default" id="champions-per5min">
+                            <input type="radio" autocomplete="off" value="false">Per 5 Minutes
+                        </label>
+                    </div>
                 </div>
 
 
                 <div class="row" align="center" style="padding-top : 20px">
-                    <button class="btn btn-primary" type="button" id="champions-go" onclick="champQuery()">Go</button>
+                    <select class="selectpicker" title="No. of Champions" id="champions-length">
+                        <option title="Showing All Champions">All</option>
+                        <option data-divider="true"></option>
+                        {% for i in range(champions_length) %}
+                            <option title="{{ "Showing " ~ (i+1) ~ " Champions" }}">{{ i + 1 }}</option>
+                        {% endfor %}
+                    </select>
+                    <select class="selectpicker" multiple data-live-search="true" data-selected-text-format="count>3" id="champions-list">
+                        {% for i in champions_name %}
+                            <option>{{ i['name'] }}</option>
+                        {% endfor %}
+                    </select>
 
+                    <button class="btn btn-primary" onclick="champSelectAll()">Select All</button>
+                    <button class="btn btn-primary" onclick="champDeselectAll()">Select None</button>
+                    <script>
+                        $('.selectpicker').selectpicker({
+                            style: 'btn-default',
+                            size: 10,
+                            width: '200'
+                        });
+                    </script>
+
+                </div>
+                <div class="row" align="center" style="padding-top : 20px">
+                    <button class="btn btn-primary" type="button" id="champions-go" onclick="champQuery()">Go</button>
                 </div>
             </div>
             <style>
 
                 rect {
-                    fill: steelblue;
+                    fill: rgb(70,130,180);
                 }
 
                 text {
                     fill: white;
                     font: 15px sans-serif;
-                    text-anchor: end;
+                    text-anchor: start;
                 }
 
                 .panel-heading a:after {
@@ -98,6 +121,11 @@
 
                 .panel-heading a.collapsed:after {
                     content:"\e080";
+                }
+
+                .panel-body {
+                    height: 540px;
+                    overflow: auto;
                 }
             </style>
             <div class="container" style="padding : 20px">
@@ -116,7 +144,7 @@
                                     <div class="panel panel-default">
                                         <div class="panel-heading">Champion Pick Rate</div>
                                         <div class="panel-collapse collapse in" id="champions-pickrate-panel">
-                                            <div class="panel-body" style="height : 515px; overflow : auto">
+                                            <div class="panel-body">
                                                 <svg id="champions-pickrate-chart">
                                                 </svg>
                                             </div>
@@ -128,7 +156,7 @@
                                     <div class="panel panel-default">
                                         <div class="panel-heading">Champion Win Rate</div>
                                         <div class="panel-collapse collapse in" id="champions-winrate-panel">
-                                            <div class="panel-body" style="height : 515px; overflow : auto">
+                                            <div class="panel-body">
                                                 <svg id="champions-winrate-chart">
                                                 </svg>
                                             </div>
@@ -155,7 +183,7 @@
                                     <div class="panel panel-default">
                                         <div class="panel-heading">Kills</div>
                                         <div class="panel-collapse collapse in" id="champions-kills-panel">
-                                            <div class="panel-body" style="height : 515px; overflow : auto">
+                                            <div class="panel-body">
                                                 <svg id="champions-kills-chart">
                                                 </svg>
                                             </div>
@@ -167,7 +195,7 @@
                                     <div class="panel panel-default">
                                         <div class="panel-heading">Deaths</div>
                                         <div class="panel-collapse collapse in" id="champions-deaths-panel">
-                                            <div class="panel-body" style="height : 515px; overflow : auto">
+                                            <div class="panel-body">
                                                 <svg id="champions-deaths-chart">
                                                 </svg>
                                             </div>
@@ -179,7 +207,7 @@
                                     <div class="panel panel-default">
                                         <div class="panel-heading">Assists</div>
                                         <div class="panel-collapse collapse in" id="champions-assists-panel">
-                                            <div class="panel-body" style="height : 515px; overflow : auto">
+                                            <div class="panel-body">
                                                 <svg id="champions-assists-chart">
                                                 </svg>
                                             </div>
@@ -206,7 +234,7 @@
                                     <div class="panel panel-default">
                                         <div class="panel-heading">Physical Damage</div>
                                         <div class="panel-collapse collapse in" id="champions-physicalDamageDealtToChampions-panel">
-                                            <div class="panel-body" style="height : 515px; overflow : auto">
+                                            <div class="panel-body">
                                                 <svg id="champions-physicalDamageDealtToChampions-chart">
                                                 </svg>
                                             </div>
@@ -218,7 +246,7 @@
                                     <div class="panel panel-default">
                                         <div class="panel-heading">Magic Damage</div>
                                         <div class="panel-collapse collapse in" id="champions-magicDamageDealtToChampions-panel">
-                                            <div class="panel-body" style="height : 515px; overflow : auto">
+                                            <div class="panel-body">
                                                 <svg id="champions-magicDamageDealtToChampions-chart">
                                                 </svg>
                                             </div>
@@ -230,7 +258,7 @@
                                     <div class="panel panel-default">
                                         <div class="panel-heading">True Damage</div>
                                         <div class="panel-collapse collapse in" id="champions-trueDamageDealtToChampions-panel">
-                                            <div class="panel-body" style="height : 515px; overflow : auto">
+                                            <div class="panel-body">
                                                 <svg id="champions-trueDamageDealtToChampions-chart">
                                                 </svg>
                                             </div>
@@ -257,7 +285,7 @@
                                     <div class="panel panel-default">
                                         <div class="panel-heading">Gold Earned</div>
                                         <div class="panel-collapse collapse in" id="champions-goldEarned-panel">
-                                            <div class="panel-body" style="height : 515px; overflow : auto">
+                                            <div class="panel-body">
                                                 <svg id="champions-goldEarned-chart">
                                                 </svg>
                                             </div>
@@ -269,7 +297,7 @@
                                     <div class="panel panel-default">
                                         <div class="panel-heading">Minions Killed</div>
                                         <div class="panel-collapse collapse in" id="champions-minionsKilled-panel">
-                                            <div class="panel-body" style="height : 515px; overflow : auto">
+                                            <div class="panel-body">
                                                 <svg id="champions-minionsKilled-chart">
                                                 </svg>
                                             </div>
@@ -281,7 +309,7 @@
                                     <div class="panel panel-default">
                                         <div class="panel-heading">Wards Placed</div>
                                         <div class="panel-collapse collapse in" id="champions-wardsPlaced-panel">
-                                            <div class="panel-body" style="height : 515px; overflow : auto">
+                                            <div class="panel-body">
                                                 <svg id="champions-wardsPlaced-chart">
                                                 </svg>
                                             </div>
@@ -305,6 +333,14 @@
         tiers = {{ tiers|tojson|safe }};
         results_url =  '{{ url_for('get_results') }}';
 
+        function champSelectAll(){
+            $('#champions-list').selectpicker('selectAll');
+        }
+
+        function champDeselectAll(){
+            $('#champions-list').selectpicker('deselectAll');
+        }
+
         function champRegionToggle(){
             toggle({{ regions|tojson|safe }}, "champions");
         }
@@ -318,9 +354,16 @@
         }
 
         function champQuery(){
-            championsBarChart("champions", regions, tiers, results_url)
+            champsSelected = $('#champions-list').selectpicker('val');
+            champsLength = $('#champions-length').selectpicker('val');
+            if (champsLength == 'All'){
+                champsLength = 126;
+            }
+            championsBarChart("champions", regions, tiers, results_url, champsSelected, champsLength);
         }
 
+        champSelectAll();
+        $('#champions-length').selectpicker('val', 10);
         champQuery()
 
     </script>
