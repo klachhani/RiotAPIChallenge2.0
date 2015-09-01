@@ -4,6 +4,7 @@ import os
 import json
 
 
+# Read and write JSON for static data
 def read_json(filename):
     path = os.path.join(os.path.dirname(__file__), r'data')
     file_path = os.path.join(path, filename)

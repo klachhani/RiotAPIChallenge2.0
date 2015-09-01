@@ -5,6 +5,7 @@ from FlaskApp.scripts.config import config
 from FlaskApp.scripts.data_retrieval.static_data import static_io
 
 
+# Get minion info: id, name. Write to JSON
 def get_minions_by_id(region='euw'):
     minions_by_id = {}
     url = 'https://global.api.pvp.net/api/lol/static-data/' + region \
@@ -18,6 +19,7 @@ def get_minions_by_id(region='euw'):
     static_io.write_json(minions_by_id, 'minions_by_id.json')
 
 
+# Get minion upgrade info: id, name. Write to JSON
 def get_minion_upgrades_by_id(region='euw'):
     upgrades_by_id = {}
     url = 'https://global.api.pvp.net/api/lol/static-data/' + region \

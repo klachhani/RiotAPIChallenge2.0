@@ -1,5 +1,6 @@
 __author__ = 'Kishan'
 
+# static data arrays
 highest_achieved_season_tier = ['CHALLENGER',
                                 'MASTER',
                                 'DIAMOND',

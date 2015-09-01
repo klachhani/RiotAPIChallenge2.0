@@ -3,7 +3,7 @@ __author__ = 'Kishan'
 import os
 import json
 
-
+# Read and write json from/for queried data
 def read_json(filename):
     path = os.path.join(os.path.split(os.path.dirname(__file__))[0], r'data_filter/data')
     file_path = os.path.join(path, filename)

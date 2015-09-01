@@ -13,6 +13,7 @@ progress_counter = int
 max_attempts = 15
 
 
+# Get json for each match id
 def main():
     global progress_counter
     regions = get_match_regions()
@@ -34,6 +35,7 @@ def main():
             progress_countdown(progress_counter, regions[r])
 
 
+# Get regions from match id JSON filenames
 def get_match_regions():
     regions = []
 
@@ -45,6 +47,7 @@ def get_match_regions():
     return regions
 
 
+# Get match ids from JSON
 def get_match_ids(match_id_files):
     match_ids = []
 
@@ -54,23 +57,27 @@ def get_match_ids(match_id_files):
     return match_ids
 
 
+# Check if math JSON exists before retrieving it
 def file_exists(region, match_id):
     return os.path.isfile(os.path.join(os.path.join
                                        (match_data_directory, region),
                                        str(match_id) + '.json'))
 
 
+# Write retrieved match data to JSON
 def write_match_data(match_data, region, match_id):
     with open(os.path.join(os.path.join(match_data_directory, region.upper()),
                            str(match_id) + '.json'), 'w') as outfile:
         json.dump(match_data, outfile)
 
 
+# Get match data from API request
 def get_match_data(region, match_id, progress_counter):
     url = url_builder(region, match_id, '/v2.2/match/')
     return url_requests.request(url, region, progress_counter)
 
 
+# Build url from which to retrieve match data
 def url_builder(region, match_id, api_request):
     https = 'https://'
     riot_api = '.api.pvp.net/api/lol/'
@@ -81,6 +88,7 @@ def url_builder(region, match_id, api_request):
             config.riot_api_key)
 
 
+# Print progress to console
 def progress_countdown(progress_counter, region):
     sys.stdout.write('\rProgress Countdown: ' + region.upper() +
                      ' ' + str(progress_counter))

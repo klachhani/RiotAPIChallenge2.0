@@ -6,7 +6,7 @@ from FlaskApp.scripts.data_retrieval.static_data import static_io as static_io
 from FlaskApp.scripts.data_analytics.data_query import query_io as query_io
 
 
-
+# Run query to aggregate releveant data
 def run_query(regions = get_match_data.get_match_regions(), tiers = static_data.highest_achieved_season_tier):
 
     minions = static_io.read_json('minions_by_id.json')
@@ -17,15 +17,15 @@ def run_query(regions = get_match_data.get_match_regions(), tiers = static_data.
     result = {}
 
     create_query_result_dict(result, minions, upgrades)
-    query_champions_json(result, data, regions, tiers, minions, upgrades)
+    query_minions_json(result, data, regions, tiers, minions, upgrades)
     calculate_extras(result)
 
     query_io.write_json(result, 'test.json')
 
     return result_breakdown(result)
 
-
-def query_champions_json(result, data, regions, tiers, minions, upgrades):
+# Cumulate relevant data according the query and evaluate other releveant information from this
+def query_minions_json(result, data, regions, tiers, minions, upgrades):
     region = (r for r in data.keys() if r in regions)
     for r in region:
         tier = (t for t in data[r].keys() if t in tiers)
@@ -40,14 +40,15 @@ def query_champions_json(result, data, regions, tiers, minions, upgrades):
                     result[m][u]['lost'] += data[r][t][m][u]['lost']
 
 
-
+# Create empty dict which will be populated with accumulated/aggregated data
+# dict[minion][upgrade]
 def create_query_result_dict(result, minions, upgrades):
     for minion_id, minion_name in minions.items():
         result[minion_id] = {'name' : minion_name, 'won' : 0, 'lost' : 0}
         for upgrade_id, upgrade_name in upgrades.items():
             result[minion_id][upgrade_id] = {'name' : upgrade_name, 'won' : 0,  'lost' : 0}
 
-
+# Evaluate any other stats which can be done after other data has been aggregated
 def calculate_extras(result):
     total_minion_picks = 0
     for m, minion in result.items():
@@ -65,6 +66,7 @@ def calculate_extras(result):
             upgrade['winrate'] = float("%.3f" % ((100 * (upgrade['won'] / upgrade_picks)) if not upgrade_picks == 0 else 0))
 
 
+# Reformat and sort data to prepare for d3.js
 def result_breakdown(result):
     winrate = []
     pickrate = []
@@ -90,8 +92,4 @@ def result_breakdown(result):
 
 
 if __name__ == '__main__':
-    a = run_query(tiers=['PLATINUM'])
-    print(a['winrate'])
-    print(a['pickrate'])
-    for values in a['upgrade_pickrate'].items():
-        print(values)
+    run_query()

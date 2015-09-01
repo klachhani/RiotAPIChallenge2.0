@@ -11,6 +11,7 @@ from FlaskApp.scripts.config import config
 
 regions = static_data.regions
 
+# Champion/player statistics to collect
 stat_titles = ['kills',
                'assists',
                'deaths',
@@ -20,6 +21,7 @@ stat_titles = ['kills',
                'minionsKilled',
                'goldEarned',
                'wardsPlaced']
+
 
 def main():
     champions_json = {}
@@ -43,6 +45,8 @@ def main():
     sys.stdout.flush()
 
 
+# Create empty dict which will be populated with accumulated/aggregated data
+# dict[region][tier][outcome][stats]
 def create_champions_dict(dict):
     champion_keys = static_io.read_json('champions_by_id.json')
     for r in regions:
@@ -51,7 +55,7 @@ def create_champions_dict(dict):
             dict[r][hast] = {}
             for key, value in champion_keys.items():
                 dict[r][hast][key] = {'won': {}, 'lost': {}}
-                for outcome, stats  in dict[r][hast][key].items():
+                for outcome, stats in dict[r][hast][key].items():
                     stats = dict[r][hast][key][outcome]
                     stats['picks'] = 0
                     stats['matchDuration'] = 0
@@ -60,6 +64,7 @@ def create_champions_dict(dict):
                         stats[t + '-per5min'] = 0
 
 
+# Populate dict from match data
 def populate_dict(dict):
     for r in regions:
         match_data_directory = os.path.join(config.match_data_directory, r.upper())

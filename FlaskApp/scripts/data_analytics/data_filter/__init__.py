@@ -5,6 +5,7 @@ import json
 import sys
 
 
+# Write filtered data to JSON in data directory
 def write_json(dict, filename):
     path = os.path.join(os.path.dirname(__file__), 'data')
     if not os.path.exists(path):

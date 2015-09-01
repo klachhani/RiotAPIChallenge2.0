@@ -37,6 +37,8 @@ def main():
     sys.stdout.flush()
 
 
+# Create empty dict which will be populated with accumulated/aggregated data
+# dict[region][tier][minion type][minion upgrade]
 def create_champions_dict(minions_json):
     minions = static_io.read_json('minions_by_id.json')
     upgrades = static_io.read_json('upgrades_by_id.json')
@@ -54,6 +56,7 @@ def create_champions_dict(minions_json):
                         {'name': upgarde_name, 'won': 0, 'lost': 0}
 
 
+# Populate dict from match data
 def populate_dict(minions_json):
     minions_and_upgrades = static_io.read_json('minions_by_id.json')
     minions_and_upgrades.update(static_io.read_json('upgrades_by_id.json'))

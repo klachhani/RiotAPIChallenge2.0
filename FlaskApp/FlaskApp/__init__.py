@@ -18,9 +18,9 @@ CHAMPIONS_NAME = get_sorted_champions('name')
 CHAMPIONS_LENGTH = len(CHAMPIONS_ID)
 
 
-@app.route('/')
-def homepage():
-    return render_template("home.html")
+#@app.route('/')
+#def homepage():
+#    return render_template("home.html")
 
 
 @app.route('/blackmarketbrawlers')

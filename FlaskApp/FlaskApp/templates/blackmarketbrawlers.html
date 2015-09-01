@@ -1,7 +1,7 @@
 {% extends "main.html" %}
 {% block header %}
 <div class="jumbotron">
-    <h1 align="center">Black Market Brawlers</h1>
+    <h1 align="center">Black Market Brawlers Stats</h1>
 </div>
 {% endblock %}
 
@@ -11,12 +11,13 @@
     <script src="/static/js/datacharts.js"></script>
 
     <!-- Nav tabs -->
-    <ul class="nav nav-tabs nav-justified" role="tablist">
+    <div class="container">
+    <ul class="nav nav-tabs nav-justified   " role="tablist">
         <li role="presentation" class="active"><a href="#Champions" aria-controls="Champions" role="tab"
                                                   data-toggle="tab">Champions</a></li>
-        <li role="presentation"><a href="#Bans" aria-controls="Bans" role="tab" data-toggle="tab">Bans</a></li>
-        <li role="presentation"><a href="#Minions" aria-controls="Minions" role="tab" data-toggle="tab">Minions</a></li>
-        <li role="presentation"><a href="#Items" aria-controls="Items" role="tab" data-toggle="tab">Items</a></li>
+        <li role="presentation" class="disabled"><a aria-controls="Bans" role="tab">Bans</a></li>
+        <li role="presentation" class="disabled"><a aria-controls="Minions" role="tab">Minions</a></li>
+        <li role="presentation" class="disabled"><a  aria-controls="Items" role="tab">Items</a></li>
     </ul>
 
     <!-- Tab panes -->
@@ -52,6 +53,16 @@
                         <button class="btn btn-default" type="button" name="tier" id="champions-won">Won</button>
                         <button class="btn btn-default" type="button" name="tier" id="champions-lost">Lost</button>
                     </div>
+
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-default active" id="champions-total" >
+                            <input type="radio" autocomplete="off" value="true" checked>Per Match
+                        </label>
+                        <label class="btn btn-default" id="champions-per5min">
+                            <input type="radio" autocomplete="off" value="false">Per 5 Minutes
+                        </label>
+                    </div>
+
                     <div class="btn-group" data-toggle="buttons">
                         <label class="btn btn-default active" id="champions-descending">
                             <input type="radio" autocomplete="off" value="true" checked>Descending
@@ -60,18 +71,19 @@
                             <input type="radio" autocomplete="off" value="false">Ascending
                         </label>
                     </div>
-                    <div class="btn-group" data-toggle="buttons">
-                        <label class="btn btn-default active" id="champions-total" >
-                            <input type="radio" autocomplete="off" value="true" checked>Total
-                        </label>
-                        <label class="btn btn-default" id="champions-per5min">
-                            <input type="radio" autocomplete="off" value="false">Per 5 Minutes
-                        </label>
-                    </div>
                 </div>
 
 
                 <div class="row" align="center" style="padding-top : 20px">
+                    <button class="btn btn-primary" onclick="champSelectAll()">Select All</button>
+                    <button class="btn btn-primary" onclick="champDeselectAll()">Select None</button>
+                    <select class="selectpicker" multiple data-live-search="true" data-selected-text-format="count>3" id="champions-list">
+                        {% for i in champions_name %}
+                            <option>{{ i['name'] }}</option>
+                        {% endfor %}
+                    </select>
+
+
                     <select class="selectpicker" title="No. of Champions" id="champions-length">
                         <option title="Showing All Champions">All</option>
                         <option data-divider="true"></option>
@@ -79,14 +91,6 @@
                             <option title="{{ "Showing " ~ (i+1) ~ " Champions" }}">{{ i + 1 }}</option>
                         {% endfor %}
                     </select>
-                    <select class="selectpicker" multiple data-live-search="true" data-selected-text-format="count>3" id="champions-list">
-                        {% for i in champions_name %}
-                            <option>{{ i['name'] }}</option>
-                        {% endfor %}
-                    </select>
-
-                    <button class="btn btn-primary" onclick="champSelectAll()">Select All</button>
-                    <button class="btn btn-primary" onclick="champDeselectAll()">Select None</button>
                     <script>
                         $('.selectpicker').selectpicker({
                             style: 'btn-default',
@@ -98,6 +102,28 @@
                 </div>
                 <div class="row" align="center" style="padding-top : 20px">
                     <button class="btn btn-primary" type="button" id="champions-go" onclick="champQuery()">Go</button>
+                </div>
+                <div class="row" style="padding-top: 20px">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <a data-toggle="collapse" data-target="#champions-guide" style="color : black">
+                                About this tab
+                            </a>
+                        </div>
+                        <div class="panel-collapse collapse" id="champions-guide">
+                            <div class="panel-body" style="height : 100%">
+                                <p>This 'Champions' tab allows you provide yourself with a customised view of data about champions played in Black Market Brawlers Games.
+                                You may filter through 99,997 matches (3 duplicated matches in TR region brings us just shy of 100,000) to find out information about champions that you already wanted to know and you may also find some other interesting and useful information which you didn't know you wanted to know. Let's hope it's both, though more so the latter!
+                                </p>
+                                <p>There are a number of ways you may choose to filter and query the data. League of Legends has become extremely prevalent in the modern gaming world, it's success can be attributed to many factors, but one that stands out above the rest is the sheer diversity offered in gameplay options. Undoubtedly, certain strategies or champions may be popularised amongst certain groups of players categorised by their region and highest achieved season tier. So, of course, the first two options you have are to filter the matches by regions and ranking (best estimate of skill level available from the data provided).</p>
+                                <p>The next filtering option is the outcome of the match. Perhaps observing combined win and loss data isn't as insightful as it could be, why not have a look at champions from only winning or losing matches...or wins and losses combined if that's still your thing.  </p>
+                                <p>So, fairly standard up until now, or maybe you thought comparing stats between Gold and Silver tier champions was actually pretty darn interesting enough...well...I'm excited about this next option! Perhaps average per game stats aren't doing it for you anymore, maybe its not very representative of a typical match especially when skewed by matches lasting less than 15 minutes or over an hour. How about those same stats but represented as per 5 minute stats!!</p>
+                                <p>Last couple items now, the very champions themselves, pick and choose which specific champions you want or don't want on the charts. Very useful, built with the user in mind (That's You!). The very last item isn't really a filter but will allow you to show the top x number of champions in the chart, this really is more of a performance managing issue. It should be fine on most browsers, but the transitions may not feel...silky smooth...you've been warned.</p>
+                                <p>Also, before I forget, hover over the champion icon if you either forgot that champion's name or if you want the actual figure represented by the bar.</p>
+                                <p>Enjoy!</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <style>
@@ -127,7 +153,7 @@
                     overflow: auto;
                 }
             </style>
-            <div class="container" style="padding : 20px">
+            <div class="container">
                 <div class="row">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
@@ -366,10 +392,11 @@
         champQuery()
 
     </script>
+        </div>
 
 <footer class="footer">
 	<div class="container">
-		[The title of Your Application] isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends &#xA9 Riot Games, Inc.
+		'Black Market Brawlers Stats' isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends &#xA9 Riot Games, Inc.
 	</div>
 
 </footer>
